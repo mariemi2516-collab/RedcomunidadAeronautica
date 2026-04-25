@@ -15,7 +15,7 @@ export type LinkSection = {
 export const planificacionLinks: LinkSection[] = [
   {
     title: "Plan de vuelo",
-    description: "Presentación del FPL electrónico",
+    description: "Presentación del FPL electrónico y NOTAM",
     items: [
       {
         id: "eana-fpl",
@@ -23,6 +23,13 @@ export const planificacionLinks: LinkSection[] = [
         subtitle: "eana.com.ar",
         url: "https://eana.com.ar/servicios",
         badge: "Oficial",
+      },
+      {
+        id: "notam-anac",
+        title: "NOTAM Argentina",
+        subtitle: "Consulta de avisos a aviadores",
+        url: "https://ais.anac.gob.ar/notam",
+        badge: "AIS",
       },
       {
         id: "aip",
@@ -131,9 +138,10 @@ export const aeropuertosLinks: LinkSection[] = [
       },
       {
         id: "aerolink",
-        title: "AeroLink",
+        title: "MADHEL (AeroLink)",
         subtitle: "Base de datos de aeródromos AR",
         url: "https://ais.anac.gob.ar/madhel/",
+        badge: "Oficial",
       },
       {
         id: "skyvector",
@@ -224,7 +232,7 @@ export type DirectorioCategoria = (typeof directorioCategorias)[number]["id"];
 
 export const directorioItems: Record<
   DirectorioCategoria,
-  { id: string; nombre: string; ubicacion: string; contacto: string }[]
+  { id: string; nombre: string; ubicacion: string; contacto: string; telUrl: string }[]
 > = {
   combustible: [
     {
@@ -232,18 +240,21 @@ export const directorioItems: Record<
       nombre: "AA2000 — AEP Aeroparque",
       ubicacion: "CABA",
       contacto: "+54 11 5480-6111",
+      telUrl: "tel:+541154806111",
     },
     {
       id: "san-fernando",
       nombre: "SAFB San Fernando — Servicios FBO",
       ubicacion: "San Fernando, BA",
       contacto: "+54 11 4744-2900",
+      telUrl: "tel:+541147442900",
     },
     {
       id: "morón",
       nombre: "Aeroclub Argentino — Morón",
       ubicacion: "Morón, BA",
       contacto: "+54 11 4628-1284",
+      telUrl: "tel:+541146281284",
     },
   ],
   talleres: [
@@ -252,12 +263,14 @@ export const directorioItems: Record<
       nombre: "TAR — Taller Aeronáutico habilitado",
       ubicacion: "San Fernando",
       contacto: "Consultar listado ANAC",
+      telUrl: "https://www.argentina.gob.ar/anac/aeronavegabilidad",
     },
     {
       id: "tar-2",
       nombre: "Mantenimiento Cessna / Piper",
       ubicacion: "Morón / La Plata",
       contacto: "Consultar listado ANAC",
+      telUrl: "https://www.argentina.gob.ar/anac/aeronavegabilidad",
     },
   ],
   alojamiento: [
@@ -266,12 +279,14 @@ export const directorioItems: Record<
       nombre: "Hospedaje cercano AD San Fernando",
       ubicacion: "Tigre, BA",
       contacto: "Consultar reservas",
+      telUrl: "https://www.google.com/maps/search/hoteles+cerca+de+SADF",
     },
     {
       id: "host-2",
       nombre: "Hostería Aeroclub Bariloche",
       ubicacion: "Bariloche, RN",
       contacto: "Consultar reservas",
+      telUrl: "tel:+542944405514",
     },
   ],
 };
