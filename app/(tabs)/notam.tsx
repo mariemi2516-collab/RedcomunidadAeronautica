@@ -19,7 +19,7 @@ const NOTAM_SOURCES = [
     id: "ifis-notam",
     title: "IFIS — NOTAM Argentina",
     subtitle: "Consulta oficial integrada (EANA)",
-    url: "https://ifis.eana.com.ar/",
+    url: "https://ais.anac.gob.ar/notam/",
     badge: "Oficial",
   },
   {

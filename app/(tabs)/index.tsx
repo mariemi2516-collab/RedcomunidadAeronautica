@@ -48,7 +48,7 @@ export default function DashboardScreen() {
       <View style={styles.header}>
         <View style={{ flex: 1 }}>
           <Text style={[styles.eyebrow, { color: colors.primary }]}>
-            AeroAR · Cockpit
+            AeroUtil · Cockpit
           </Text>
           <Text style={[styles.greeting, { color: colors.foreground }]}>
             Buen día, piloto.
@@ -180,7 +180,7 @@ export default function DashboardScreen() {
 
       <Pressable
         onPress={() =>
-          WebBrowser.openBrowserAsync("https://ais.eana.com.ar/")
+          WebBrowser.openBrowserAsync("https://ais.anac.gob.ar/aip")
         }
         style={({ pressed }) => [
           styles.disclaimer,
@@ -197,7 +197,7 @@ export default function DashboardScreen() {
           style={[styles.disclaimerText, { color: colors.mutedForeground }]}
         >
           Verifique siempre la información en fuentes oficiales (EANA / ANAC /
-          SMN). AeroAR centraliza enlaces, no reemplaza la documentación
+          SMN). AeroUtil centraliza enlaces, no reemplaza la documentación
           oficial.
         </Text>
       </Pressable>

@@ -1,4 +1,4 @@
-# AeroAR
+# AeroUtil
 
 App Expo para aviacion general en Argentina. Centraliza enlaces operativos, METAR, calculadoras, bitacora local, vencimientos, reservas y flujo SOS.
 

@@ -97,7 +97,7 @@ export default function VuelosScreen() {
                 </View>
                 <Pressable
                   onPress={() =>
-                    WebBrowser.openBrowserAsync("https://fpl.eana.com.ar/")
+                    WebBrowser.openBrowserAsync("https://www.eana.com.ar/servicios")
                   }
                   style={({ pressed }) => [
                     styles.fplBtn,

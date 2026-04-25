@@ -39,7 +39,7 @@ export default function DirectorioScreen() {
                 {
                   backgroundColor: isActive ? colors.primary : colors.card,
                   borderColor: isActive ? colors.primary : colors.border,
-                  borderRadius: 999,
+                  borderRadius: 14,
                   opacity: pressed ? 0.85 : 1,
                 },
               ]}
@@ -117,7 +117,7 @@ export default function DirectorioScreen() {
 
         <Text style={[styles.note, { color: colors.mutedForeground }]}>
           Confirmá disponibilidad y precios con el proveedor antes de
-          desplazarte. AeroAR no provee servicios; solo facilita el contacto.
+          desplazarte. AeroUtil no provee servicios; solo facilita el contacto.
         </Text>
       </ScrollView>
     </View>
@@ -126,11 +126,17 @@ export default function DirectorioScreen() {
 
 const styles = StyleSheet.create({
   cat: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  catText: { fontFamily: "Inter_600SemiBold", fontSize: 12 },
+  catText: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 12,
+    textAlign: "center",
+  },
   row: {
     flexDirection: "row",
     alignItems: "center",

@@ -44,7 +44,7 @@ export default function DisclaimerScreen() {
         </Text>
 
         <Text style={[styles.body, { color: colors.mutedForeground }]}>
-          AeroAR es una herramienta de consulta y centralización de enlaces a
+          AeroUtil es una herramienta de consulta y centralización de enlaces a
           fuentes públicas (EANA, ANAC, SMN, JST, etc.). El usuario debe
           verificar siempre la información en las fuentes oficiales antes de
           tomar decisiones operativas.
@@ -58,7 +58,7 @@ export default function DisclaimerScreen() {
 
         <Text style={[styles.body, { color: colors.mutedForeground }]}>
           La seguridad operacional es responsabilidad del piloto al mando.
-          AeroAR es una herramienta complementaria.
+          AeroUtil es una herramienta complementaria.
         </Text>
       </ScrollView>
 

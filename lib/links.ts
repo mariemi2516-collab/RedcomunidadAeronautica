@@ -20,15 +20,15 @@ export const planificacionLinks: LinkSection[] = [
       {
         id: "eana-fpl",
         title: "EANA — Plan de Vuelo Electrónico",
-        subtitle: "fpl.eana.com.ar",
-        url: "https://fpl.eana.com.ar/",
+        subtitle: "Servicios EANA",
+        url: "https://www.eana.com.ar/servicios",
         badge: "Oficial",
       },
       {
         id: "aip",
         title: "AIP Argentina",
         subtitle: "Cartas, manuales y publicación aeronáutica",
-        url: "https://ais.eana.com.ar/",
+        url: "https://ais.anac.gob.ar/aip",
         badge: "Oficial",
       },
     ],
@@ -126,14 +126,14 @@ export const aeropuertosLinks: LinkSection[] = [
         id: "ifis",
         title: "IFIS — EANA",
         subtitle: "Información integrada de vuelo",
-        url: "https://ifis.eana.com.ar/",
+        url: "https://ais.anac.gob.ar/",
         badge: "Oficial",
       },
       {
         id: "aerolink",
-        title: "AeroLink",
-        subtitle: "Base de datos de aeródromos AR",
-        url: "https://www.aerolink.com.ar/",
+        title: "MADHEL — Aeródromos AR",
+        subtitle: "Manual de aeródromos y helipuertos",
+        url: "https://ais.anac.gob.ar/madhel/",
       },
       {
         id: "skyvector",
@@ -153,7 +153,7 @@ export const bibliotecaLinks: LinkSection[] = [
         id: "raac",
         title: "RAAC — Reglamento Argentino",
         subtitle: "Aviación civil",
-        url: "https://www.argentina.gob.ar/anac/normativa/raac",
+        url: "https://www.argentina.gob.ar/anac/raac-dnar-regulaciones-argentinas-de-aviacion-civil/raac",
         badge: "ANAC",
       },
       {
@@ -192,7 +192,7 @@ export const comercialesLinks: LinkSection[] = [
       {
         id: "ar",
         title: "Aerolíneas Argentinas",
-        url: "https://www.aerolineas.com.ar/",
+        url: "https://www.aerolineas.com.ar/es-us/chequea-el-estado-de-tu-reserva-y-vuelo",
       },
       {
         id: "fb",
