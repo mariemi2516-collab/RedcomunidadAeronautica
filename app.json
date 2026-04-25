@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "AeroAR - Aviacion General",
-    "slug": "aeroar-aviacion-general",
+    "slug": "AeroUtil",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
