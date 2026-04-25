@@ -20,15 +20,15 @@ export const planificacionLinks: LinkSection[] = [
       {
         id: "eana-fpl",
         title: "EANA — Plan de Vuelo Electrónico",
-        subtitle: "fpl.eana.com.ar",
-        url: "https://fpl.eana.com.ar/",
+        subtitle: "eana.com.ar",
+        url: "https://eana.com.ar/servicios",
         badge: "Oficial",
       },
       {
         id: "aip",
         title: "AIP Argentina",
         subtitle: "Cartas, manuales y publicación aeronáutica",
-        url: "https://ais.eana.com.ar/",
+        url: "https://ais.anac.gob.ar/",
         badge: "Oficial",
       },
     ],
@@ -40,7 +40,7 @@ export const planificacionLinks: LinkSection[] = [
         id: "anac-cad",
         title: "ANAC — CAD",
         subtitle: "Licencias, CMA y certificaciones",
-        url: "https://www.argentina.gob.ar/anac",
+        url: "https://cad.anac.gob.ar/",
         badge: "Oficial",
       },
       {
@@ -92,7 +92,7 @@ export const meteorologiaLinks: LinkSection[] = [
         id: "rem",
         title: "Estaciones REM",
         subtitle: "Red de estaciones meteorológicas",
-        url: "https://ssd.smn.gob.ar/",
+        url: "https://www.smn.gob.ar/meteorologia-aeronautica",
       },
     ],
   },
@@ -133,7 +133,7 @@ export const aeropuertosLinks: LinkSection[] = [
         id: "aerolink",
         title: "AeroLink",
         subtitle: "Base de datos de aeródromos AR",
-        url: "https://www.aerolink.com.ar/",
+        url: "https://ais.anac.gob.ar/madhel/",
       },
       {
         id: "skyvector",
@@ -153,7 +153,7 @@ export const bibliotecaLinks: LinkSection[] = [
         id: "raac",
         title: "RAAC — Reglamento Argentino",
         subtitle: "Aviación civil",
-        url: "https://www.argentina.gob.ar/anac/normativa/raac",
+        url: "https://www.argentina.gob.ar/anac/regulaciones-argentinas-de-aviacion-civil-raac",
         badge: "ANAC",
       },
       {
@@ -192,7 +192,7 @@ export const comercialesLinks: LinkSection[] = [
       {
         id: "ar",
         title: "Aerolíneas Argentinas",
-        url: "https://www.aerolineas.com.ar/",
+        url: "https://www.aerolineas.com.ar/?activeTab=flightStatus",
       },
       {
         id: "fb",
