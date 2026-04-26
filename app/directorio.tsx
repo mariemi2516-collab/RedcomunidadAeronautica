@@ -72,7 +72,6 @@ export default function DirectorioScreen() {
 
 const styles = StyleSheet.create({
   cat: {
- arreglar links
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderWidth: 1,
