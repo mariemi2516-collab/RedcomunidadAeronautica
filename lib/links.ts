@@ -4,7 +4,6 @@ export type ExternalLink = {
   subtitle?: string;
   url: string;
   badge?: string;
-  /** If set, navigate to this internal route instead of opening the URL. */
   route?: string;
 };
 
@@ -30,13 +29,10 @@ export const planificacionLinks: LinkSection[] = [
       {
         id: "eana-fpl",
         title: "EANA — Plan de Vuelo Electrónico",
-
         subtitle: "Servicios EANA",
         url: "https://www.eana.com.ar/servicios",
-
         subtitle: "eana.com.ar",
         url: "https://eana.com.ar/servicios",
-        main
         badge: "Oficial",
       },
       {
@@ -59,10 +55,8 @@ export const planificacionLinks: LinkSection[] = [
         id: "aip",
         title: "AIP Argentina",
         subtitle: "Cartas, manuales y publicación aeronáutica",
-
         url: "https://ais.anac.gob.ar/aip",
         url: "https://ais.anac.gob.ar/",
-         main
         badge: "Oficial",
       },
     ],
@@ -202,7 +196,6 @@ export const bibliotecaLinks: LinkSection[] = [
         id: "raac",
         title: "RAAC — Reglamento Argentino",
         subtitle: "Aviación civil",
-
         url: "https://www.argentina.gob.ar/anac/raac-dnar-regulaciones-argentinas-de-aviacion-civil/raac",
         url: "https://www.argentina.gob.ar/anac/regulaciones-argentinas-de-aviacion-civil-raac",
         badge: "ANAC",
