@@ -31,6 +31,15 @@ export const planificacionLinks: LinkSection[] = [
         url: "https://ais.anac.gob.ar/notam",
         badge: "AIS",
       },
+      // IFIS NOTAM — enlace roto al momento de la última revisión.
+      // Mantener comentado hasta confirmar URL vigente de EANA.
+      // {
+      //   id: "ifis-notam",
+      //   title: "IFIS NOTAM — EANA",
+      //   subtitle: "Información integrada de vuelo",
+      //   url: "https://ifis.eana.com.ar/notam",
+      //   badge: "Oficial",
+      // },
       {
         id: "aip",
         title: "AIP Argentina",
@@ -66,17 +75,19 @@ export const meteorologiaLinks: LinkSection[] = [
     title: "Información oficial",
     items: [
       {
-        id: "smn",
+        id: "smn-aero",
         title: "SMN Aeronáutica",
         subtitle: "METAR · TAF · SIGMET",
-        url: "https://www.smn.gob.ar/aeronautica",
+        // Actualizado: portal renovado del SMN
+        url: "https://ws2.smn.gob.ar/",
         badge: "SMN",
       },
       {
         id: "smn-pronos",
         title: "SMN — Pronóstico aeronáutico",
         subtitle: "Argentina y región",
-        url: "https://www.smn.gob.ar/",
+        // Actualizado: ws2 es el portal vigente
+        url: "https://ws2.smn.gob.ar/",
       },
     ],
   },
@@ -87,12 +98,21 @@ export const meteorologiaLinks: LinkSection[] = [
         id: "windy",
         title: "Windy.com",
         subtitle: "ECMWF · GFS · radar",
-        url: "https://www.windy.com/?-34.6,-58.4,7",
+        // Actualizado: centrado en La Pampa (Santa Rosa ~-36.6, -64.3), zoom 5
+        url: "https://www.windy.com/?-36.619,-64.280,5",
+      },
+      {
+        id: "smn-satelite",
+        title: "SMN — Imágenes satelitales",
+        subtitle: "Satélite GOES · infrarrojo · vapor de agua",
+        // Actualizado: endpoint dedicado de satélite del SMN
+        url: "https://ws2.smn.gob.ar/satelite",
+        badge: "SMN",
       },
       {
         id: "goes",
-        title: "GOES-16 — Satélite",
-        subtitle: "Imágenes infrarrojo / vapor de agua",
+        title: "GOES-16 — NOAA",
+        subtitle: "Imágenes infrarrojo / vapor de agua (Sudamérica)",
         url: "https://www.star.nesdis.noaa.gov/goes/sector.php?sat=G16&sector=ssa",
       },
       {
