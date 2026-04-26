@@ -4,6 +4,8 @@ export type ExternalLink = {
   subtitle?: string;
   url: string;
   badge?: string;
+  /** If set, navigate to this internal route instead of opening the URL. */
+  route?: string;
 };
 
 export type LinkSection = {
@@ -17,6 +19,14 @@ export const planificacionLinks: LinkSection[] = [
     title: "Plan de vuelo",
     description: "Presentación del FPL electrónico",
     items: [
+      {
+        id: "fpl-form",
+        title: "Plan de vuelo — Formulario ICAO",
+        subtitle: "Completá, descargá en blanco o con datos",
+        url: "",
+        route: "/fpl-form",
+        badge: "Editable",
+      },
       {
         id: "eana-fpl",
         title: "EANA — Plan de Vuelo Electrónico",

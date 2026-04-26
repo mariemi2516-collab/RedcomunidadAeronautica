@@ -72,6 +72,10 @@ function RootLayoutNav() {
       />
       <Stack.Screen name="calc/conversor" options={{ title: "Conversor" }} />
       <Stack.Screen name="calc/caudal" options={{ title: "Cálculo de caudal" }} />
+      <Stack.Screen
+        name="fpl-form"
+        options={{ title: "Plan de vuelo — FPL" }}
+      />
     </Stack>
   );
 }
