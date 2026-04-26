@@ -55,7 +55,7 @@ export default function SosScreen() {
       } catch {}
     }
 
-    const piloto = pilot.nombre || "Piloto AeroAR";
+    const piloto = pilot.nombre || "Piloto AeroUtil";
     const matricula = pilot.aeronavePredeterminada
       ? ` - ${pilot.aeronavePredeterminada.toUpperCase()}`
       : "";

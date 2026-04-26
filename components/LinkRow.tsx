@@ -1,4 +1,5 @@
 import { Feather } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -10,6 +11,7 @@ type LinkRowProps = {
   subtitle?: string;
   badge?: string;
   url?: string;
+  route?: string;
   onPress?: () => void;
   rightIcon?: React.ComponentProps<typeof Feather>["name"];
 };
@@ -19,14 +21,21 @@ export function LinkRow({
   subtitle,
   badge,
   url,
+  route,
   onPress,
-  rightIcon = "external-link",
+  rightIcon,
 }: LinkRowProps) {
   const colors = useColors();
+  const router = useRouter();
+
+  const isInternal = !!route;
+  const icon = rightIcon ?? (isInternal ? "chevron-right" : "external-link");
 
   const handlePress = async () => {
     if (onPress) onPress();
-    else if (url) {
+    else if (route) {
+      router.push(route as never);
+    } else if (url) {
       await WebBrowser.openBrowserAsync(url);
     }
   };
@@ -77,7 +86,7 @@ export function LinkRow({
           </Text>
         ) : null}
       </View>
-      <Feather name={rightIcon} size={18} color={colors.mutedForeground} />
+      <Feather name={icon} size={18} color={colors.mutedForeground} />
     </Pressable>
   );
 }

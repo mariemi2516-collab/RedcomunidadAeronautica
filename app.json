@@ -40,7 +40,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "AeroAR usa tu ubicacion para mostrar aeropuertos cercanos y adjuntarla al mensaje SOS."
+          "locationWhenInUsePermission": "AeroUtil usa tu ubicacion para mostrar aeropuertos cercanos y adjuntarla al mensaje SOS."
         }
       ]
     ],

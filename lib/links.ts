@@ -4,6 +4,8 @@ export type ExternalLink = {
   subtitle?: string;
   url: string;
   badge?: string;
+  /** If set, navigate to this internal route instead of opening the URL. */
+  route?: string;
 };
 
 export type LinkSection = {
@@ -18,10 +20,23 @@ export const planificacionLinks: LinkSection[] = [
     description: "Presentación del FPL electrónico y NOTAM",
     items: [
       {
+        id: "fpl-form",
+        title: "Plan de vuelo — Formulario ICAO",
+        subtitle: "Completá, descargá en blanco o con datos",
+        url: "",
+        route: "/fpl-form",
+        badge: "Editable",
+      },
+      {
         id: "eana-fpl",
         title: "EANA — Plan de Vuelo Electrónico",
+
+        subtitle: "Servicios EANA",
+        url: "https://www.eana.com.ar/servicios",
+
         subtitle: "eana.com.ar",
         url: "https://eana.com.ar/servicios",
+        main
         badge: "Oficial",
       },
       {
@@ -44,7 +59,10 @@ export const planificacionLinks: LinkSection[] = [
         id: "aip",
         title: "AIP Argentina",
         subtitle: "Cartas, manuales y publicación aeronáutica",
+
+        url: "https://ais.anac.gob.ar/aip",
         url: "https://ais.anac.gob.ar/",
+         main
         badge: "Oficial",
       },
     ],
@@ -153,11 +171,14 @@ export const aeropuertosLinks: LinkSection[] = [
         id: "ifis",
         title: "IFIS — EANA",
         subtitle: "Información integrada de vuelo",
-        url: "https://ifis.eana.com.ar/",
+        url: "https://ais.anac.gob.ar/",
         badge: "Oficial",
       },
       {
         id: "aerolink",
+        title: "MADHEL — Aeródromos AR",
+        subtitle: "Manual de aeródromos y helipuertos",
+        url: "https://ais.anac.gob.ar/madhel/",
         title: "MADHEL (AeroLink)",
         subtitle: "Base de datos de aeródromos AR",
         url: "https://ais.anac.gob.ar/madhel/",
@@ -181,6 +202,8 @@ export const bibliotecaLinks: LinkSection[] = [
         id: "raac",
         title: "RAAC — Reglamento Argentino",
         subtitle: "Aviación civil",
+
+        url: "https://www.argentina.gob.ar/anac/raac-dnar-regulaciones-argentinas-de-aviacion-civil/raac",
         url: "https://www.argentina.gob.ar/anac/regulaciones-argentinas-de-aviacion-civil-raac",
         badge: "ANAC",
       },
@@ -220,6 +243,7 @@ export const comercialesLinks: LinkSection[] = [
       {
         id: "ar",
         title: "Aerolíneas Argentinas",
+        url: "https://www.aerolineas.com.ar/es-us/chequea-el-estado-de-tu-reserva-y-vuelo",
         url: "https://www.aerolineas.com.ar/?activeTab=flightStatus",
       },
       {
