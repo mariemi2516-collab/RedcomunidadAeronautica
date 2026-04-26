@@ -17,7 +17,7 @@ export type LinkSection = {
 export const planificacionLinks: LinkSection[] = [
   {
     title: "Plan de vuelo",
-    description: "Presentación del FPL electrónico",
+    description: "Presentación del FPL electrónico y NOTAM",
     items: [
       {
         id: "fpl-form",
@@ -30,15 +30,39 @@ export const planificacionLinks: LinkSection[] = [
       {
         id: "eana-fpl",
         title: "EANA — Plan de Vuelo Electrónico",
+
         subtitle: "Servicios EANA",
         url: "https://www.eana.com.ar/servicios",
+
+        subtitle: "eana.com.ar",
+        url: "https://eana.com.ar/servicios",
+        main
         badge: "Oficial",
       },
+      {
+        id: "notam-anac",
+        title: "NOTAM Argentina",
+        subtitle: "Consulta de avisos a aviadores",
+        url: "https://ais.anac.gob.ar/notam",
+        badge: "AIS",
+      },
+      // IFIS NOTAM — enlace roto al momento de la última revisión.
+      // Mantener comentado hasta confirmar URL vigente de EANA.
+      // {
+      //   id: "ifis-notam",
+      //   title: "IFIS NOTAM — EANA",
+      //   subtitle: "Información integrada de vuelo",
+      //   url: "https://ifis.eana.com.ar/notam",
+      //   badge: "Oficial",
+      // },
       {
         id: "aip",
         title: "AIP Argentina",
         subtitle: "Cartas, manuales y publicación aeronáutica",
+
         url: "https://ais.anac.gob.ar/aip",
+        url: "https://ais.anac.gob.ar/",
+         main
         badge: "Oficial",
       },
     ],
@@ -50,7 +74,7 @@ export const planificacionLinks: LinkSection[] = [
         id: "anac-cad",
         title: "ANAC — CAD",
         subtitle: "Licencias, CMA y certificaciones",
-        url: "https://www.argentina.gob.ar/anac",
+        url: "https://cad.anac.gob.ar/",
         badge: "Oficial",
       },
       {
@@ -69,17 +93,19 @@ export const meteorologiaLinks: LinkSection[] = [
     title: "Información oficial",
     items: [
       {
-        id: "smn",
+        id: "smn-aero",
         title: "SMN Aeronáutica",
         subtitle: "METAR · TAF · SIGMET",
-        url: "https://www.smn.gob.ar/aeronautica",
+        // Actualizado: portal renovado del SMN
+        url: "https://ws2.smn.gob.ar/",
         badge: "SMN",
       },
       {
         id: "smn-pronos",
         title: "SMN — Pronóstico aeronáutico",
         subtitle: "Argentina y región",
-        url: "https://www.smn.gob.ar/",
+        // Actualizado: ws2 es el portal vigente
+        url: "https://ws2.smn.gob.ar/",
       },
     ],
   },
@@ -90,19 +116,28 @@ export const meteorologiaLinks: LinkSection[] = [
         id: "windy",
         title: "Windy.com",
         subtitle: "ECMWF · GFS · radar",
-        url: "https://www.windy.com/?-34.6,-58.4,7",
+        // Actualizado: centrado en La Pampa (Santa Rosa ~-36.6, -64.3), zoom 5
+        url: "https://www.windy.com/?-36.619,-64.280,5",
+      },
+      {
+        id: "smn-satelite",
+        title: "SMN — Imágenes satelitales",
+        subtitle: "Satélite GOES · infrarrojo · vapor de agua",
+        // Actualizado: endpoint dedicado de satélite del SMN
+        url: "https://ws2.smn.gob.ar/satelite",
+        badge: "SMN",
       },
       {
         id: "goes",
-        title: "GOES-16 — Satélite",
-        subtitle: "Imágenes infrarrojo / vapor de agua",
+        title: "GOES-16 — NOAA",
+        subtitle: "Imágenes infrarrojo / vapor de agua (Sudamérica)",
         url: "https://www.star.nesdis.noaa.gov/goes/sector.php?sat=G16&sector=ssa",
       },
       {
         id: "rem",
         title: "Estaciones REM",
         subtitle: "Red de estaciones meteorológicas",
-        url: "https://ssd.smn.gob.ar/",
+        url: "https://www.smn.gob.ar/meteorologia-aeronautica",
       },
     ],
   },
@@ -144,6 +179,10 @@ export const aeropuertosLinks: LinkSection[] = [
         title: "MADHEL — Aeródromos AR",
         subtitle: "Manual de aeródromos y helipuertos",
         url: "https://ais.anac.gob.ar/madhel/",
+        title: "MADHEL (AeroLink)",
+        subtitle: "Base de datos de aeródromos AR",
+        url: "https://ais.anac.gob.ar/madhel/",
+        badge: "Oficial",
       },
       {
         id: "skyvector",
@@ -163,7 +202,9 @@ export const bibliotecaLinks: LinkSection[] = [
         id: "raac",
         title: "RAAC — Reglamento Argentino",
         subtitle: "Aviación civil",
+
         url: "https://www.argentina.gob.ar/anac/raac-dnar-regulaciones-argentinas-de-aviacion-civil/raac",
+        url: "https://www.argentina.gob.ar/anac/regulaciones-argentinas-de-aviacion-civil-raac",
         badge: "ANAC",
       },
       {
@@ -203,6 +244,7 @@ export const comercialesLinks: LinkSection[] = [
         id: "ar",
         title: "Aerolíneas Argentinas",
         url: "https://www.aerolineas.com.ar/es-us/chequea-el-estado-de-tu-reserva-y-vuelo",
+        url: "https://www.aerolineas.com.ar/?activeTab=flightStatus",
       },
       {
         id: "fb",
@@ -234,7 +276,7 @@ export type DirectorioCategoria = (typeof directorioCategorias)[number]["id"];
 
 export const directorioItems: Record<
   DirectorioCategoria,
-  { id: string; nombre: string; ubicacion: string; contacto: string }[]
+  { id: string; nombre: string; ubicacion: string; contacto: string; telUrl: string }[]
 > = {
   combustible: [
     {
@@ -242,18 +284,21 @@ export const directorioItems: Record<
       nombre: "AA2000 — AEP Aeroparque",
       ubicacion: "CABA",
       contacto: "+54 11 5480-6111",
+      telUrl: "tel:+541154806111",
     },
     {
       id: "san-fernando",
       nombre: "SAFB San Fernando — Servicios FBO",
       ubicacion: "San Fernando, BA",
       contacto: "+54 11 4744-2900",
+      telUrl: "tel:+541147442900",
     },
     {
       id: "morón",
       nombre: "Aeroclub Argentino — Morón",
       ubicacion: "Morón, BA",
       contacto: "+54 11 4628-1284",
+      telUrl: "tel:+541146281284",
     },
   ],
   talleres: [
@@ -262,12 +307,14 @@ export const directorioItems: Record<
       nombre: "TAR — Taller Aeronáutico habilitado",
       ubicacion: "San Fernando",
       contacto: "Consultar listado ANAC",
+      telUrl: "https://www.argentina.gob.ar/anac/aeronavegabilidad",
     },
     {
       id: "tar-2",
       nombre: "Mantenimiento Cessna / Piper",
       ubicacion: "Morón / La Plata",
       contacto: "Consultar listado ANAC",
+      telUrl: "https://www.argentina.gob.ar/anac/aeronavegabilidad",
     },
   ],
   alojamiento: [
@@ -276,12 +323,14 @@ export const directorioItems: Record<
       nombre: "Hospedaje cercano AD San Fernando",
       ubicacion: "Tigre, BA",
       contacto: "Consultar reservas",
+      telUrl: "https://www.google.com/maps/search/hoteles+cerca+de+SADF",
     },
     {
       id: "host-2",
       nombre: "Hostería Aeroclub Bariloche",
       ubicacion: "Bariloche, RN",
       contacto: "Consultar reservas",
+      telUrl: "tel:+542944405514",
     },
   ],
 };

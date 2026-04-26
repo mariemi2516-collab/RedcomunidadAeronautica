@@ -90,12 +90,29 @@ export default function SosScreen() {
         return;
       }
 
-      const url =
-        mode === "whatsapp"
-          ? `https://wa.me/${target.replace(/^\+/, "")}?text=${encodeURIComponent(message)}`
-          : `sms:${target}?body=${encodeURIComponent(message)}`;
+      if (mode === "whatsapp") {
+        const whatsappUrl = `whatsapp://send?phone=${target.replace(/^\+/, "")}&text=${encodeURIComponent(message)}`;
+        const canOpen = await Linking.canOpenURL(whatsappUrl);
 
-      await Linking.openURL(url);
+        if (canOpen) {
+          await Linking.openURL(whatsappUrl);
+        } else {
+          // WhatsApp no está instalado: fallback silencioso a SMS
+          const smsUrl = `sms:${target}?body=${encodeURIComponent(message)}`;
+          const canSms = await Linking.canOpenURL(smsUrl);
+          if (canSms) {
+            await Linking.openURL(smsUrl);
+          } else {
+            Alert.alert(
+              "No se pudo enviar",
+              "No se encontro WhatsApp ni SMS en este dispositivo.",
+            );
+          }
+        }
+      } else {
+        const smsUrl = `sms:${target}?body=${encodeURIComponent(message)}`;
+        await Linking.openURL(smsUrl);
+      }
     } catch {
       Alert.alert("No se pudo enviar", "Verifica la app de mensajeria.");
     } finally {
@@ -140,64 +157,29 @@ export default function SosScreen() {
           },
         ]}
       >
-        <Feather
-          name="alert-octagon"
-          size={42}
-          color={colors.destructiveForeground}
-        />
-        <Text
-          style={[styles.sosBigText, { color: colors.destructiveForeground }]}
-        >
+        <Feather name="alert-octagon" size={42} color={colors.destructiveForeground} />
+        <Text style={[styles.sosBigText, { color: colors.destructiveForeground }]}>
           ENVIAR SOS
         </Text>
-        <Text
-          style={[
-            styles.sosBigDesc,
-            { color: colors.destructiveForeground, opacity: 0.85 },
-          ]}
-        >
+        <Text style={[styles.sosBigDesc, { color: colors.destructiveForeground, opacity: 0.85 }]}>
           WhatsApp con tu posicion GPS al primer contacto
         </Text>
       </Pressable>
 
       <View style={styles.actionsRow}>
         <View style={{ flex: 1 }}>
-          <PrimaryButton
-            label="Enviar por SMS"
-            icon="message-square"
-            variant="secondary"
-            onPress={() => sendSos("sms")}
-            full
-          />
+          <PrimaryButton label="Enviar por SMS" icon="message-square" variant="secondary" onPress={() => sendSos("sms")} full />
         </View>
         <View style={{ flex: 1 }}>
-          <PrimaryButton
-            label="Llamar SAR"
-            icon="phone-call"
-            onPress={callSAR}
-            full
-          />
+          <PrimaryButton label="Llamar SAR" icon="phone-call" onPress={callSAR} full />
         </View>
       </View>
 
-      <View
-        style={[
-          styles.sarCard,
-          {
-            backgroundColor: colors.card,
-            borderColor: colors.border,
-            borderRadius: colors.radius,
-          },
-        ]}
-      >
+      <View style={[styles.sarCard, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius }]}>
         <Feather name="shield" size={18} color={colors.primary} />
         <View style={{ flex: 1 }}>
-          <Text style={[styles.sarTitle, { color: colors.foreground }]}>
-            {SAR_LABEL}
-          </Text>
-          <Text style={[styles.sarDesc, { color: colors.mutedForeground }]}>
-            Centro Coordinador SAR - {SAR_NUMBER}
-          </Text>
+          <Text style={[styles.sarTitle, { color: colors.foreground }]}>{SAR_LABEL}</Text>
+          <Text style={[styles.sarDesc, { color: colors.mutedForeground }]}>Centro Coordinador SAR - {SAR_NUMBER}</Text>
         </View>
       </View>
 
@@ -207,98 +189,36 @@ export default function SosScreen() {
         </Text>
 
         {sosContacts.length === 0 ? (
-          <EmptyState
-            icon="users"
-            title="Sin contactos cargados"
-            description="Agrega familiares, instructores o responsables de aeroclub."
-          />
+          <EmptyState icon="users" title="Sin contactos cargados" description="Agrega familiares, instructores o responsables de aeroclub." />
         ) : (
           sosContacts.map((c) => (
-            <View
-              key={c.id}
-              style={[
-                styles.contactRow,
-                {
-                  backgroundColor: colors.card,
-                  borderColor: colors.border,
-                  borderRadius: colors.radius - 2,
-                },
-              ]}
-            >
-              <View
-                style={[
-                  styles.avatar,
-                  { backgroundColor: colors.primary + "26", borderRadius: 999 },
-                ]}
-              >
+            <View key={c.id} style={[styles.contactRow, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius - 2 }]}>
+              <View style={[styles.avatar, { backgroundColor: colors.primary + "26", borderRadius: 999 }]}>
                 <Feather name="user" size={16} color={colors.primary} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={[styles.contactName, { color: colors.foreground }]}>
-                  {c.nombre}
-                </Text>
-                <Text
-                  style={[styles.contactPhone, { color: colors.mutedForeground }]}
-                >
-                  {c.telefono}
-                </Text>
+                <Text style={[styles.contactName, { color: colors.foreground }]}>{c.nombre}</Text>
+                <Text style={[styles.contactPhone, { color: colors.mutedForeground }]}>{c.telefono}</Text>
               </View>
-              <Pressable
-                onPress={() => Linking.openURL(`tel:${c.telefono}`)}
-                hitSlop={10}
-                style={({ pressed }) => [
-                  styles.iconBtn,
-                  { opacity: pressed ? 0.6 : 1 },
-                ]}
-              >
+              <Pressable onPress={() => Linking.openURL(`tel:${c.telefono}`)} hitSlop={10} style={({ pressed }) => [styles.iconBtn, { opacity: pressed ? 0.6 : 1 }]}>
                 <Feather name="phone" size={16} color={colors.success} />
               </Pressable>
-              <Pressable
-                onPress={() => removeSosContact(c.id)}
-                hitSlop={10}
-                style={({ pressed }) => [
-                  styles.iconBtn,
-                  { opacity: pressed ? 0.6 : 1 },
-                ]}
-              >
+              <Pressable onPress={() => removeSosContact(c.id)} hitSlop={10} style={({ pressed }) => [styles.iconBtn, { opacity: pressed ? 0.6 : 1 }]}>
                 <Feather name="x" size={16} color={colors.mutedForeground} />
               </Pressable>
             </View>
           ))
         )}
 
-        <View
-          style={[
-            styles.addCard,
-            {
-              backgroundColor: colors.card,
-              borderColor: colors.border,
-              borderRadius: colors.radius,
-            },
-          ]}
-        >
-          <FormField
-            label="Nombre"
-            value={nombre}
-            onChangeText={setNombre}
-            placeholder="Ej. Instructor"
-          />
-          <FormField
-            label="Telefono"
-            value={telefono}
-            onChangeText={setTelefono}
-            keyboardType="phone-pad"
-            placeholder="+54 9 11 ..."
-          />
+        <View style={[styles.addCard, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius }]}>
+          <FormField label="Nombre" value={nombre} onChangeText={setNombre} placeholder="Ej. Instructor" />
+          <FormField label="Telefono" value={telefono} onChangeText={setTelefono} keyboardType="phone-pad" placeholder="+54 9 11 ..." />
           <PrimaryButton
             label="Agregar contacto"
             icon="user-plus"
             onPress={async () => {
               if (!nombre.trim() || !telefono.trim()) return;
-              await addSosContact({
-                nombre: nombre.trim(),
-                telefono: telefono.trim(),
-              });
+              await addSosContact({ nombre: nombre.trim(), telefono: telefono.trim() });
               setNombre("");
               setTelefono("");
             }}
@@ -311,84 +231,21 @@ export default function SosScreen() {
 }
 
 const styles = StyleSheet.create({
-  eyebrow: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 11,
-    letterSpacing: 1.8,
-  },
-  title: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 26,
-    marginTop: 4,
-    letterSpacing: -0.4,
-  },
-  sub: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 13,
-    marginTop: 4,
-    lineHeight: 19,
-  },
-  sosBig: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 32,
-    gap: 6,
-  },
-  sosBigText: {
-    fontFamily: "Inter_700Bold",
-    fontSize: 22,
-    letterSpacing: 2,
-  },
-  sosBigDesc: {
-    fontFamily: "Inter_500Medium",
-    fontSize: 12,
-    marginTop: 4,
-    textAlign: "center",
-    paddingHorizontal: 24,
-  },
+  eyebrow: { fontFamily: "Inter_600SemiBold", fontSize: 11, letterSpacing: 1.8 },
+  title: { fontFamily: "Inter_700Bold", fontSize: 26, marginTop: 4, letterSpacing: -0.4 },
+  sub: { fontFamily: "Inter_400Regular", fontSize: 13, marginTop: 4, lineHeight: 19 },
+  sosBig: { alignItems: "center", justifyContent: "center", paddingVertical: 32, gap: 6 },
+  sosBigText: { fontFamily: "Inter_700Bold", fontSize: 22, letterSpacing: 2 },
+  sosBigDesc: { fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 4, textAlign: "center", paddingHorizontal: 24 },
   actionsRow: { flexDirection: "row", gap: 10 },
-  sarCard: {
-    padding: 14,
-    borderWidth: 1,
-    flexDirection: "row",
-    gap: 12,
-    alignItems: "center",
-  },
+  sarCard: { padding: 14, borderWidth: 1, flexDirection: "row", gap: 12, alignItems: "center" },
   sarTitle: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
-  sarDesc: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 12,
-    marginTop: 2,
-  },
-  sectionLabel: {
-    fontFamily: "Inter_600SemiBold",
-    fontSize: 11,
-    letterSpacing: 1.8,
-  },
-  contactRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    padding: 12,
-    borderWidth: 1,
-  },
-  avatar: {
-    width: 36,
-    height: 36,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  sarDesc: { fontFamily: "Inter_400Regular", fontSize: 12, marginTop: 2 },
+  sectionLabel: { fontFamily: "Inter_600SemiBold", fontSize: 11, letterSpacing: 1.8 },
+  contactRow: { flexDirection: "row", alignItems: "center", gap: 12, padding: 12, borderWidth: 1 },
+  avatar: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
   contactName: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
-  contactPhone: {
-    fontFamily: "Inter_400Regular",
-    fontSize: 12,
-    marginTop: 2,
-  },
+  contactPhone: { fontFamily: "Inter_400Regular", fontSize: 12, marginTop: 2 },
   iconBtn: { padding: 6 },
-  addCard: {
-    padding: 16,
-    borderWidth: 1,
-    gap: 12,
-    marginTop: 6,
-  },
+  addCard: { padding: 16, borderWidth: 1, gap: 12, marginTop: 6 },
 });
