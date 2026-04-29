@@ -1,5 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { Paths, File as ExpoFile } from "expo-file-system";
+import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import React, { useRef, useState } from "react";
 import {
@@ -120,34 +121,43 @@ export default function FplFormScreen() {
 
   /* ── captura y compartir ── */
   const capture = async (mode: "filled" | "blank") => {
+    const savedFpl = { ...fpl }; // guardar SIEMPRE antes de todo
+
     try {
       setCapturing(true);
-      const savedFpl = { ...fpl };
 
       if (mode === "blank") {
         setFpl(BLANK);
-        await new Promise((r) => setTimeout(r, 200));
+        await new Promise((r) => setTimeout(r, 500));
       }
 
       if (!viewShotRef.current?.capture) {
         Alert.alert("Error", "No se pudo inicializar la captura.");
         return;
       }
+
       const uri = await viewShotRef.current.capture();
-
-      if (mode === "blank") setFpl(savedFpl);
-
       const tag = mode === "blank" ? "en-blanco" : fpl.aircraftId || "lleno";
       const filename = `FPL_${tag}_${fpl.date || "sin-fecha"}.png`;
 
       if (Platform.OS === "web") {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+
         const link = document.createElement("a");
-        link.href = uri;
+        link.href = blobUrl;
         link.download = filename;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+
+        Alert.alert("Éxito", "Archivo descargado correctamente");
         return;
       }
 
+      // iOS / Android
       const destFile = new ExpoFile(Paths.cache, filename);
       const srcFile = new ExpoFile(uri);
       await srcFile.copy(destFile);
@@ -162,8 +172,76 @@ export default function FplFormScreen() {
       } else {
         Alert.alert("Guardado", `Archivo guardado en:\n${dest}`);
       }
-    } catch {
+    } catch (error) {
+      console.error("Error en captura:", error);
       Alert.alert("Error", "No se pudo generar la imagen.");
+    } finally {
+      // se ejecuta SIEMPRE, haya error o no
+      if (mode === "blank") setFpl(savedFpl);
+      setCapturing(false);
+    }
+  };
+
+  /* ── imprimir (web + móvil) ── */
+  const imprimir = async () => {
+    try {
+      setCapturing(true);
+
+      if (!viewShotRef.current?.capture) {
+        Alert.alert("Error", "No se pudo capturar el formulario");
+        return;
+      }
+
+      const uri = await viewShotRef.current.capture();
+
+      if (Platform.OS === "web") {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+
+        const ventanaImpresion = window.open();
+        if (ventanaImpresion) {
+          ventanaImpresion.document.write(`
+            <html>
+              <head>
+                <title>Plan de Vuelo - ${fpl.aircraftId || "FPL"}</title>
+                <style>
+                  body {
+                    margin: 0; padding: 20px; display: flex;
+                    justify-content: center; align-items: center;
+                    min-height: 100vh; background: white;
+                  }
+                  img { max-width: 100%; height: auto;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+                  @media print {
+                    body { margin: 0; padding: 0; }
+                    img { box-shadow: none; }
+                  }
+                </style>
+              </head>
+              <body>
+                <img src="${blobUrl}"
+                  onload="window.print(); setTimeout(() => window.close(), 1000);" />
+              </body>
+            </html>
+          `);
+          ventanaImpresion.document.close();
+        }
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+      } else {
+        // ✅ iOS / Android — impresión nativa
+        const html = `
+          <html>
+            <body style="margin:0;padding:0;background:white;">
+              <img src="${uri}" style="width:100%;height:auto;" />
+            </body>
+          </html>
+        `;
+        await Print.printAsync({ html });
+      }
+    } catch (error) {
+      console.error("Error en impresión:", error);
+      Alert.alert("Error", "No se pudo preparar la impresión");
     } finally {
       setCapturing(false);
     }
@@ -200,7 +278,7 @@ export default function FplFormScreen() {
             PLAN DE VUELO / FLIGHT PLAN
           </Text>
           <Text style={[styles.sub, { color: colors.mutedForeground }]}>
-            Formulario ICAO — Completá, descargá y compartí
+            Formulario ICAO — Completá, descargá, imprimí y compartí
           </Text>
         </View>
 
@@ -612,70 +690,29 @@ export default function FplFormScreen() {
                 styles={{ es: lblEs, en: lblEn }}
               />
               <View style={styles.switchRow}>
-                <Tog
-                  label="Polar"
-                  value={fpl.survivalPolar}
-                  onToggle={(v) => set("survivalPolar", v)}
-                />
-                <Tog
-                  label="Desierto / Desert"
-                  value={fpl.survivalDesert}
-                  onToggle={(v) => set("survivalDesert", v)}
-                />
-                <Tog
-                  label="Marítimo / Maritime"
-                  value={fpl.survivalMaritime}
-                  onToggle={(v) => set("survivalMaritime", v)}
-                />
-                <Tog
-                  label="Selva / Jungle"
-                  value={fpl.survivalJungle}
-                  onToggle={(v) => set("survivalJungle", v)}
-                />
+                <Tog label="Polar" value={fpl.survivalPolar} onToggle={(v) => set("survivalPolar", v)} />
+                <Tog label="Desierto / Desert" value={fpl.survivalDesert} onToggle={(v) => set("survivalDesert", v)} />
+                <Tog label="Marítimo / Maritime" value={fpl.survivalMaritime} onToggle={(v) => set("survivalMaritime", v)} />
+                <Tog label="Selva / Jungle" value={fpl.survivalJungle} onToggle={(v) => set("survivalJungle", v)} />
               </View>
             </Field>
 
             {/* Chalecos */}
             <Field flex={1}>
-              <BiLabel
-                es="CHALECOS"
-                en="JACKETS"
-                styles={{ es: lblEs, en: lblEn }}
-              />
+              <BiLabel es="CHALECOS" en="JACKETS" styles={{ es: lblEs, en: lblEn }} />
               <View style={styles.switchRow}>
-                <Tog
-                  label="Luz / Light"
-                  value={fpl.jacketsLight}
-                  onToggle={(v) => set("jacketsLight", v)}
-                />
-                <Tog
-                  label="Fluor."
-                  value={fpl.jacketsFluores}
-                  onToggle={(v) => set("jacketsFluores", v)}
-                />
-                <Tog
-                  label="UHF"
-                  value={fpl.jacketsUhf}
-                  onToggle={(v) => set("jacketsUhf", v)}
-                />
-                <Tog
-                  label="VHF"
-                  value={fpl.jacketsVhf}
-                  onToggle={(v) => set("jacketsVhf", v)}
-                />
+                <Tog label="Luz / Light" value={fpl.jacketsLight} onToggle={(v) => set("jacketsLight", v)} />
+                <Tog label="Fluor." value={fpl.jacketsFluores} onToggle={(v) => set("jacketsFluores", v)} />
+                <Tog label="UHF" value={fpl.jacketsUhf} onToggle={(v) => set("jacketsUhf", v)} />
+                <Tog label="VHF" value={fpl.jacketsVhf} onToggle={(v) => set("jacketsVhf", v)} />
               </View>
             </Field>
 
             {/* Botes */}
             <View style={styles.switchRow}>
-              <Tog
-                label="Botes / Dinghies"
-                value={fpl.dinghies}
-                onToggle={(v) => set("dinghies", v)}
-              />
+              <Tog label="Botes / Dinghies" value={fpl.dinghies} onToggle={(v) => set("dinghies", v)} />
             </View>
 
-            {/* Texto final */}
             <Field flex={1}>
               <BiLabel
                 es="COLOR Y MARCAS DE LA AERONAVE"
@@ -693,11 +730,7 @@ export default function FplFormScreen() {
             </Field>
 
             <Field flex={1}>
-              <BiLabel
-                es="OBSERVACIONES"
-                en="REMARKS"
-                styles={{ es: lblEs, en: lblEn }}
-              />
+              <BiLabel es="OBSERVACIONES" en="REMARKS" styles={{ es: lblEs, en: lblEn }} />
               <TextInput
                 value={fpl.remarks}
                 onChangeText={(v) => set("remarks", v)}
@@ -724,11 +757,7 @@ export default function FplFormScreen() {
             </Field>
 
             <Field flex={1}>
-              <BiLabel
-                es="PRESENTADO POR"
-                en="FILED BY"
-                styles={{ es: lblEs, en: lblEn }}
-              />
+              <BiLabel es="PRESENTADO POR" en="FILED BY" styles={{ es: lblEs, en: lblEn }} />
               <TextInput
                 value={fpl.filedBy}
                 onChangeText={(v) => set("filedBy", v.toUpperCase())}
@@ -739,7 +768,6 @@ export default function FplFormScreen() {
               />
             </Field>
 
-            {/* pie del formulario */}
             <View style={[styles.formFooter, { borderTopColor: colors.border }]}>
               <Text style={[styles.footerTxt, { color: colors.mutedForeground }]}>
                 AeroUtil · Plan de vuelo ICAO
@@ -764,17 +792,11 @@ export default function FplFormScreen() {
           onPress={() => setFpl(BLANK)}
           style={({ pressed }) => [
             styles.btnSec,
-            {
-              borderColor: colors.border,
-              borderRadius: colors.radius - 6,
-              opacity: pressed ? 0.7 : 1,
-            },
+            { borderColor: colors.border, borderRadius: colors.radius - 6, opacity: pressed ? 0.7 : 1 },
           ]}
         >
           <Feather name="trash-2" size={15} color={colors.mutedForeground} />
-          <Text style={[styles.btnSecTxt, { color: colors.foreground }]}>
-            Limpiar
-          </Text>
+          <Text style={[styles.btnSecTxt, { color: colors.foreground }]}>Limpiar</Text>
         </Pressable>
 
         <Pressable
@@ -782,17 +804,11 @@ export default function FplFormScreen() {
           disabled={capturing}
           style={({ pressed }) => [
             styles.btnSec,
-            {
-              borderColor: colors.primary,
-              borderRadius: colors.radius - 6,
-              opacity: capturing ? 0.5 : pressed ? 0.8 : 1,
-            },
+            { borderColor: colors.primary, borderRadius: colors.radius - 6, opacity: capturing ? 0.5 : pressed ? 0.8 : 1 },
           ]}
         >
           <Feather name="file" size={15} color={colors.primary} />
-          <Text style={[styles.btnSecTxt, { color: colors.primary }]}>
-            En blanco
-          </Text>
+          <Text style={[styles.btnSecTxt, { color: colors.primary }]}>En blanco</Text>
         </Pressable>
 
         <Pressable
@@ -800,17 +816,26 @@ export default function FplFormScreen() {
           disabled={capturing}
           style={({ pressed }) => [
             styles.btnPri,
-            {
-              backgroundColor: colors.primary,
-              borderRadius: colors.radius - 6,
-              opacity: capturing ? 0.5 : pressed ? 0.85 : 1,
-            },
+            { backgroundColor: colors.primary, borderRadius: colors.radius - 6, opacity: capturing ? 0.5 : pressed ? 0.85 : 1 },
           ]}
         >
           <Feather name="download" size={15} color={colors.primaryForeground} />
           <Text style={[styles.btnPriTxt, { color: colors.primaryForeground }]}>
             {capturing ? "Generando..." : "Descargar"}
           </Text>
+        </Pressable>
+
+        {/* Botón imprimir — todas las plataformas */}
+        <Pressable
+          onPress={imprimir}
+          disabled={capturing}
+          style={({ pressed }) => [
+            styles.btnSec,
+            { borderColor: colors.primary, borderRadius: colors.radius - 6, opacity: capturing ? 0.5 : pressed ? 0.8 : 1 },
+          ]}
+        >
+          <Feather name="printer" size={15} color={colors.primary} />
+          <Text style={[styles.btnSecTxt, { color: colors.primary }]}>Imprimir</Text>
         </Pressable>
       </View>
     </View>
@@ -819,15 +844,7 @@ export default function FplFormScreen() {
 
 /* ───── componentes auxiliares ───── */
 
-function BiLabel({
-  es,
-  en,
-  styles: s,
-}: {
-  es: string;
-  en: string;
-  styles: { es: object[]; en: object[] };
-}) {
+function BiLabel({ es, en, styles: s }: { es: string; en: string; styles: { es: object[]; en: object[] } }) {
   return (
     <View style={{ marginBottom: 3 }}>
       <Text style={s.es}>{es}</Text>
@@ -840,15 +857,7 @@ function Field({ flex, children }: { flex: number; children: React.ReactNode }) 
   return <View style={{ flex }}>{children}</View>;
 }
 
-function ChipRow({
-  options,
-  selected,
-  onSelect,
-}: {
-  options: string[];
-  selected: string;
-  onSelect: (v: string) => void;
-}) {
+function ChipRow({ options, selected, onSelect }: { options: string[]; selected: string; onSelect: (v: string) => void }) {
   const colors = useColors();
   return (
     <View style={styles.chipRow}>
@@ -867,14 +876,7 @@ function ChipRow({
               },
             ]}
           >
-            <Text
-              style={[
-                styles.chipTxt,
-                {
-                  color: active ? colors.primaryForeground : colors.foreground,
-                },
-              ]}
-            >
+            <Text style={[styles.chipTxt, { color: active ? colors.primaryForeground : colors.foreground }]}>
               {o}
             </Text>
           </Pressable>
@@ -884,15 +886,7 @@ function ChipRow({
   );
 }
 
-function Tog({
-  label,
-  value,
-  onToggle,
-}: {
-  label: string;
-  value: boolean;
-  onToggle: (v: boolean) => void;
-}) {
+function Tog({ label, value, onToggle }: { label: string; value: boolean; onToggle: (v: boolean) => void }) {
   const colors = useColors();
   return (
     <View style={styles.togItem}>
