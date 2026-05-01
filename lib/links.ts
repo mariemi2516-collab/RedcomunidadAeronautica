@@ -260,9 +260,9 @@ export const comercialesLinks: LinkSection[] = [
 ];
 
 export const directorioCategorias = [
-  { id: "combustible", label: "Combustible (AVGAS / JET A1)" },
-  { id: "talleres", label: "Talleres aeronáuticos" },
-  { id: "alojamiento", label: "Alojamiento cercano a AD" },
+  { id: "combustibles", label: "Combustibles" },
+  { id: "talleres", label: "Talleres Aeronáuticos" },
+  { id: "servicios", label: "Servicios" },
 ] as const;
 
 export type DirectorioCategoria = (typeof directorioCategorias)[number]["id"];
@@ -271,7 +271,7 @@ export const directorioItems: Record<
   DirectorioCategoria,
   { id: string; nombre: string; ubicacion: string; contacto: string; telUrl: string }[]
 > = {
-  combustible: [
+  combustibles: [
     {
       id: "aep",
       nombre: "AA2000 — AEP Aeroparque",
@@ -310,20 +310,20 @@ export const directorioItems: Record<
       telUrl: "https://www.argentina.gob.ar/anac/aeronavegabilidad",
     },
   ],
-  alojamiento: [
-    {
-      id: "host-1",
-      nombre: "Hospedaje cercano AD San Fernando",
-      ubicacion: "Tigre, BA",
-      contacto: "Consultar reservas",
-      telUrl: "https://www.google.com/maps/search/hoteles+cerca+de+SADF",
-    },
-    {
-      id: "host-2",
-      nombre: "Hostería Aeroclub Bariloche",
-      ubicacion: "Bariloche, RN",
-      contacto: "Consultar reservas",
-      telUrl: "tel:+542944405514",
-    },
-  ],
-};
+  servicios: [
+      {
+        id: "srv-1",
+        nombre: "Servicio de hangaraje y limpieza",
+        ubicacion: "Consultar aeroclub local",
+        contacto: "Consultar disponibilidad",
+        telUrl: "https://www.argentina.gob.ar/anac",
+      },
+      {
+        id: "srv-2",
+        nombre: "Servicios FBO / handling",
+        ubicacion: "Aeropuertos AA2000",
+        contacto: "+54 11 5480-6111",
+        telUrl: "tel:+541154806111",
+      },
+    ],
+  };
