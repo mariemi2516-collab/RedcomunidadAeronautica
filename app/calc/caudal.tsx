@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { FormField } from "@/components/FormField";
 import { useColors } from "@/hooks/useColors";
@@ -14,6 +15,7 @@ const MODES: { id: Mode; label: string; out: string }[] = [
 
 export default function CaudalScreen() {
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   const [mode, setMode] = useState<Mode>("vol-tiempo");
   const [a, setA] = useState("100");
   const [b, setB] = useState("4");
@@ -33,11 +35,17 @@ export default function CaudalScreen() {
   }, [mode]);
 
   return (
-    <ScrollView
+    <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ padding: 20, gap: 14 }}
-      keyboardShouldPersistTaps="handled"
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 160, gap: 14 }}
+          keyboardShouldPersistTaps="handled"
+        >
       <Text style={[styles.note, { color: colors.mutedForeground }]}>
         Calcula caudal de combustible o agua para reabastecimiento, riego de
         pista o aspersión agroaérea.
@@ -94,6 +102,8 @@ export default function CaudalScreen() {
         </Text>
       </View>
     </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

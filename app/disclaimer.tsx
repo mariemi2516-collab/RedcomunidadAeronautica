@@ -23,7 +23,7 @@ export default function DisclaimerScreen() {
       <ScrollView
         contentContainerStyle={{
           padding: 24,
-          paddingBottom: insets.bottom + 120,
+          paddingBottom: insets.bottom + 160,
           gap: 18,
         }}
       >

@@ -5,17 +5,20 @@ import * as Location from "expo-location";
 import React, { useState } from "react";
 import {
   Alert,
+  Keyboard,
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   StyleSheet,
   Text,
+  TouchableWithoutFeedback,
   View,
+  ScrollView,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { EmptyState } from "@/components/EmptyState";
 import { FormField } from "@/components/FormField";
-  import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { useAppData } from "@/contexts/AppDataContext";
 import { useColors } from "@/hooks/useColors";
@@ -27,6 +30,7 @@ export default function SosScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const { sosContacts, addSosContact, removeSosContact, pilot } = useAppData();
+
   const [nombre, setNombre] = useState("");
   const [telefono, setTelefono] = useState("");
   const [sending, setSending] = useState(false);
@@ -41,15 +45,18 @@ export default function SosScreen() {
             timeout: 10000,
           });
         });
+
         coords = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
       } catch {}
     } else {
       try {
         const { status } = await Location.requestForegroundPermissionsAsync();
+
         if (status === "granted") {
           const pos = await Location.getCurrentPositionAsync({
             accuracy: Location.Accuracy.Balanced,
           });
+
           coords = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
         }
       } catch {}
@@ -65,10 +72,7 @@ export default function SosScreen() {
 
   const sendSos = async (mode: "whatsapp" | "sms") => {
     if (sosContacts.length === 0) {
-      Alert.alert(
-        "Sin contactos",
-        "Agrega al menos un contacto de emergencia antes de enviar.",
-      );
+      Alert.alert("Sin contactos", "Agrega al menos un contacto de emergencia.");
       return;
     }
 
@@ -83,38 +87,27 @@ export default function SosScreen() {
       const target = sosContacts[0]?.telefono?.replace(/[^\d+]/g, "");
 
       if (!target) {
-        Alert.alert(
-          "Contacto invalido",
-          "El primer contacto no tiene un telefono valido.",
-        );
+        Alert.alert("Contacto invalido", "El primer contacto no tiene telefono valido.");
         return;
       }
 
       if (mode === "whatsapp") {
-        const whatsappUrl = `whatsapp://send?phone=${target.replace(/^\+/, "")}&text=${encodeURIComponent(message)}`;
-        const canOpen = await Linking.canOpenURL(whatsappUrl);
+        const url = `whatsapp://send?phone=${target.replace(/^\+/, "")}&text=${encodeURIComponent(message)}`;
+
+        const canOpen = await Linking.canOpenURL(url);
 
         if (canOpen) {
-          await Linking.openURL(whatsappUrl);
+          await Linking.openURL(url);
         } else {
-          // WhatsApp no está instalado: fallback silencioso a SMS
           const smsUrl = `sms:${target}?body=${encodeURIComponent(message)}`;
-          const canSms = await Linking.canOpenURL(smsUrl);
-          if (canSms) {
-            await Linking.openURL(smsUrl);
-          } else {
-            Alert.alert(
-              "No se pudo enviar",
-              "No se encontro WhatsApp ni SMS en este dispositivo.",
-            );
-          }
+          await Linking.openURL(smsUrl);
         }
       } else {
         const smsUrl = `sms:${target}?body=${encodeURIComponent(message)}`;
         await Linking.openURL(smsUrl);
       }
     } catch {
-      Alert.alert("No se pudo enviar", "Verifica la app de mensajeria.");
+      Alert.alert("Error", "No se pudo enviar el SOS.");
     } finally {
       setSending(false);
     }
@@ -125,23 +118,29 @@ export default function SosScreen() {
   };
 
   return (
-    <ScrollView
+    <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{
-        paddingTop: insets.top + 12,
-        paddingBottom: insets.bottom + 110,
-        paddingHorizontal: 20,
-        gap: 18,
-      }}
-      keyboardShouldPersistTaps="handled"
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{
+            paddingTop: insets.top + 12,
+            paddingBottom: insets.bottom + 160,
+            paddingHorizontal: 16,
+            gap: 16,
+          }}
+          keyboardShouldPersistTaps="handled"
+        >
       <View>
         <Text style={[styles.eyebrow, { color: colors.destructive }]}>
           EMERGENCIA
         </Text>
         <Text style={[styles.title, { color: colors.foreground }]}>SOS</Text>
         <Text style={[styles.sub, { color: colors.mutedForeground }]}>
-          Comparti tu posicion y notifica a tus contactos en un toque.
+          Compartí tu posición y notificá a tus contactos.
         </Text>
       </View>
 
@@ -157,95 +156,136 @@ export default function SosScreen() {
           },
         ]}
       >
-        <Feather name="alert-octagon" size={42} color={colors.destructiveForeground} />
-        <Text style={[styles.sosBigText, { color: colors.destructiveForeground }]}>
-          ENVIAR SOS
-        </Text>
-        <Text style={[styles.sosBigDesc, { color: colors.destructiveForeground, opacity: 0.85 }]}>
-          WhatsApp con tu posicion GPS al primer contacto
+        <Feather name="alert-octagon" size={42} color="#fff" />
+        <Text style={styles.sosBigText}>ENVIAR SOS</Text>
+        <Text style={styles.sosBigDesc}>
+          WhatsApp con tu ubicación GPS
         </Text>
       </Pressable>
 
       <View style={styles.actionsRow}>
         <View style={{ flex: 1 }}>
-          <PrimaryButton label="Enviar por SMS" icon="message-square" variant="secondary" onPress={() => sendSos("sms")} full />
+          <PrimaryButton
+            label="SMS"
+            icon="message-square"
+            variant="secondary"
+            onPress={() => sendSos("sms")}
+            full
+          />
         </View>
+
         <View style={{ flex: 1 }}>
-          <PrimaryButton label="Llamar SAR" icon="phone-call" onPress={callSAR} full />
+          <PrimaryButton
+            label="Llamar SAR"
+            icon="phone-call"
+            onPress={callSAR}
+            full
+          />
         </View>
       </View>
 
-      <View style={[styles.sarCard, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius }]}>
-        <Feather name="shield" size={18} color={colors.primary} />
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.sarTitle, { color: colors.foreground }]}>{SAR_LABEL}</Text>
-          <Text style={[styles.sarDesc, { color: colors.mutedForeground }]}>Centro Coordinador SAR - {SAR_NUMBER}</Text>
-        </View>
-      </View>
-
-      <View style={{ gap: 10 }}>
-        <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>
-          CONTACTOS DE EMERGENCIA
-        </Text>
+      <View>
+        <Text style={styles.sectionLabel}>CONTACTOS</Text>
 
         {sosContacts.length === 0 ? (
-          <EmptyState icon="users" title="Sin contactos cargados" description="Agrega familiares, instructores o responsables de aeroclub." />
+          <EmptyState
+            icon="users"
+            title="Sin contactos"
+            description="Agregá contactos de emergencia"
+          />
         ) : (
           sosContacts.map((c) => (
-            <View key={c.id} style={[styles.contactRow, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius - 2 }]}>
-              <View style={[styles.avatar, { backgroundColor: colors.primary + "26", borderRadius: 999 }]}>
+            <View key={c.id} style={styles.contactRow}>
+              <View style={styles.avatar}>
                 <Feather name="user" size={16} color={colors.primary} />
               </View>
+
               <View style={{ flex: 1 }}>
-                <Text style={[styles.contactName, { color: colors.foreground }]}>{c.nombre}</Text>
-                <Text style={[styles.contactPhone, { color: colors.mutedForeground }]}>{c.telefono}</Text>
+                <Text style={styles.contactName}>{c.nombre}</Text>
+                <Text style={styles.contactPhone}>{c.telefono}</Text>
               </View>
-              <Pressable onPress={() => Linking.openURL(`tel:${c.telefono}`)} hitSlop={10} style={({ pressed }) => [styles.iconBtn, { opacity: pressed ? 0.6 : 1 }]}>
-                <Feather name="phone" size={16} color={colors.success} />
+
+              <Pressable onPress={() => Linking.openURL(`tel:${c.telefono}`)} hitSlop={12} style={styles.contactAction}>
+                <Feather name="phone" size={18} color="green" />
               </Pressable>
-              <Pressable onPress={() => removeSosContact(c.id)} hitSlop={10} style={({ pressed }) => [styles.iconBtn, { opacity: pressed ? 0.6 : 1 }]}>
-                <Feather name="x" size={16} color={colors.mutedForeground} />
+
+              <Pressable onPress={() => removeSosContact(c.id)} hitSlop={12} style={styles.contactAction}>
+                <Feather name="x" size={18} color="gray" />
               </Pressable>
             </View>
           ))
         )}
 
-        <View style={[styles.addCard, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius }]}>
-          <FormField label="Nombre" value={nombre} onChangeText={setNombre} placeholder="Ej. Instructor" />
-          <FormField label="Telefono" value={telefono} onChangeText={setTelefono} keyboardType="phone-pad" placeholder="+54 9 11 ..." />
+        <View style={styles.addCard}>
+          <FormField label="Nombre" value={nombre} onChangeText={setNombre} />
+          <FormField
+            label="Telefono"
+            value={telefono}
+            onChangeText={setTelefono}
+            keyboardType="phone-pad"
+          />
+
           <PrimaryButton
-            label="Agregar contacto"
+            label="Agregar"
             icon="user-plus"
-            onPress={async () => {
-              if (!nombre.trim() || !telefono.trim()) return;
-              await addSosContact({ nombre: nombre.trim(), telefono: telefono.trim() });
+            onPress={() => {
+              if (!nombre || !telefono) return;
+              addSosContact({ nombre, telefono });
               setNombre("");
               setTelefono("");
             }}
             full
           />
         </View>
-      </View>
-    </KeyboardAwareScrollViewCompat>
+          </View>
+      </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  eyebrow: { fontFamily: "Inter_600SemiBold", fontSize: 11, letterSpacing: 1.8 },
-  title: { fontFamily: "Inter_700Bold", fontSize: 26, marginTop: 4, letterSpacing: -0.4 },
-  sub: { fontFamily: "Inter_400Regular", fontSize: 13, marginTop: 4, lineHeight: 19 },
-  sosBig: { alignItems: "center", justifyContent: "center", paddingVertical: 32, gap: 6 },
-  sosBigText: { fontFamily: "Inter_700Bold", fontSize: 22, letterSpacing: 2 },
-  sosBigDesc: { fontFamily: "Inter_500Medium", fontSize: 12, marginTop: 4, textAlign: "center", paddingHorizontal: 24 },
+  eyebrow: { fontSize: 11, fontWeight: "600" },
+  title: { fontSize: 26, fontWeight: "700" },
+  sub: { fontSize: 13, marginTop: 4 },
+
+  sosBig: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 30,
+    gap: 6,
+  },
+
+  sosBigText: { color: "#fff", fontSize: 22, fontWeight: "700" },
+  sosBigDesc: { color: "#fff", fontSize: 12, opacity: 0.8 },
+
   actionsRow: { flexDirection: "row", gap: 10 },
-  sarCard: { padding: 14, borderWidth: 1, flexDirection: "row", gap: 12, alignItems: "center" },
-  sarTitle: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
-  sarDesc: { fontFamily: "Inter_400Regular", fontSize: 12, marginTop: 2 },
-  sectionLabel: { fontFamily: "Inter_600SemiBold", fontSize: 11, letterSpacing: 1.8 },
-  contactRow: { flexDirection: "row", alignItems: "center", gap: 12, padding: 12, borderWidth: 1 },
-  avatar: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
-  contactName: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
-  contactPhone: { fontFamily: "Inter_400Regular", fontSize: 12, marginTop: 2 },
-  iconBtn: { padding: 6 },
-  addCard: { padding: 16, borderWidth: 1, gap: 12, marginTop: 6 },
+
+  sectionLabel: { fontSize: 11, fontWeight: "600", marginBottom: 10 },
+
+  contactRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    padding: 10,
+  },
+
+  avatar: {
+    width: 36,
+    height: 36,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  contactAction: {
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  contactName: { fontWeight: "600" },
+  contactPhone: { fontSize: 12 },
+
+  addCard: { marginTop: 10, gap: 10 },
 });

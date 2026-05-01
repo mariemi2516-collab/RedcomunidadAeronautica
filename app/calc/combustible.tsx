@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { FormField } from "@/components/FormField";
 import { useColors } from "@/hooks/useColors";
 
 export default function CombustibleScreen() {
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   const [consumo, setConsumo] = useState("28");
   const [tiempo, setTiempo] = useState("1.5");
   const [reserva, setReserva] = useState("0.75");
@@ -23,66 +25,74 @@ export default function CombustibleScreen() {
   }, [consumo, tiempo, reserva, precio]);
 
   return (
-    <ScrollView
+    <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ padding: 20, gap: 14 }}
-      keyboardShouldPersistTaps="handled"
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
-      <Text style={[styles.note, { color: colors.mutedForeground }]}>
-        Estimación de combustible y costo. Verificá consumo real con el POH y
-        condiciones de vuelo.
-      </Text>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 160, gap: 14 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Text style={[styles.note, { color: colors.mutedForeground }]}>
+            Estimación de combustible y costo. Verificá consumo real con el POH y
+            condiciones de vuelo.
+          </Text>
 
-      <FormField
-        label="Consumo (lts/h)"
-        value={consumo}
-        onChangeText={setConsumo}
-        keyboardType="decimal-pad"
-      />
-      <FormField
-        label="Tiempo de vuelo (h)"
-        value={tiempo}
-        onChangeText={setTiempo}
-        keyboardType="decimal-pad"
-      />
-      <FormField
-        label="Reserva legal (h)"
-        value={reserva}
-        onChangeText={setReserva}
-        keyboardType="decimal-pad"
-      />
-      <FormField
-        label="Precio AVGAS (ARS/lt) — opcional"
-        value={precio}
-        onChangeText={setPrecio}
-        keyboardType="decimal-pad"
-      />
-
-      <View
-        style={[
-          styles.results,
-          {
-            backgroundColor: colors.card,
-            borderColor: colors.border,
-            borderRadius: colors.radius,
-          },
-        ]}
-      >
-        <Result label="Tramo" value={`${result.tripLts.toFixed(1)} lts`} />
-        <Result label="Reserva" value={`${result.reservaLts.toFixed(1)} lts`} />
-        <Result
-          label="Total a cargar"
-          value={`${result.totalLts.toFixed(1)} lts`}
-          highlight
-        />
-        {result.cost != null ? (
-          <Result
-            label="Costo estimado"
-            value={`$ ${result.cost.toLocaleString("es-AR", { maximumFractionDigits: 0 })}`}
+          <FormField
+            label="Consumo (lts/h)"
+            value={consumo}
+            onChangeText={setConsumo}
+            keyboardType="decimal-pad"
           />
-        ) : null}
-      </View>
-    </ScrollView>
+          <FormField
+            label="Tiempo de vuelo (h)"
+            value={tiempo}
+            onChangeText={setTiempo}
+            keyboardType="decimal-pad"
+          />
+          <FormField
+            label="Reserva legal (h)"
+            value={reserva}
+            onChangeText={setReserva}
+            keyboardType="decimal-pad"
+          />
+          <FormField
+            label="Precio AVGAS (ARS/lt) — opcional"
+            value={precio}
+            onChangeText={setPrecio}
+            keyboardType="decimal-pad"
+          />
+
+          <View
+            style={[
+              styles.results,
+              {
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+                borderRadius: colors.radius,
+              },
+            ]}
+          >
+            <Result label="Tramo" value={`${result.tripLts.toFixed(1)} lts`} />
+            <Result label="Reserva" value={`${result.reservaLts.toFixed(1)} lts`} />
+            <Result
+              label="Total a cargar"
+              value={`${result.totalLts.toFixed(1)} lts`}
+              highlight
+            />
+            {result.cost != null ? (
+              <Result
+                label="Costo estimado"
+                value={`$ ${result.cost.toLocaleString("es-AR", { maximumFractionDigits: 0 })}`}
+              />
+            ) : null}
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

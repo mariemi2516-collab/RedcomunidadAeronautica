@@ -1,3 +1,4 @@
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -7,10 +8,11 @@ import { traficoLinks } from "@/lib/links";
 
 export default function TraficoScreen() {
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ padding: 20, gap: 18 }}
+      contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 160, gap: 16 }}
     >
       {traficoLinks.map((sec) => (
         <View key={sec.title} style={{ gap: 10 }}>

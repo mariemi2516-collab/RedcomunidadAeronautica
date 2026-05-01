@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { FormField } from "@/components/FormField";
 import { useColors } from "@/hooks/useColors";
 
 export default function DensidadAltitudScreen() {
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   const [elev, setElev] = useState("100");
   const [qnh, setQnh] = useState("1013");
   const [oat, setOat] = useState("25");
@@ -21,11 +23,17 @@ export default function DensidadAltitudScreen() {
   }, [elev, qnh, oat]);
 
   return (
-    <ScrollView
+    <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ padding: 20, gap: 14 }}
-      keyboardShouldPersistTaps="handled"
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 160, gap: 14 }}
+          keyboardShouldPersistTaps="handled"
+        >
       <Text style={[styles.note, { color: colors.mutedForeground }]}>
         Calcula la altitud densidad a partir de elevación, QNH y temperatura
         actual del aeródromo (OAT).
@@ -74,6 +82,8 @@ export default function DensidadAltitudScreen() {
         despegue y revisar gradiente de ascenso publicado en el POH.
       </Text>
     </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

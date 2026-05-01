@@ -36,7 +36,7 @@ export default function VuelosScreen() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={{
           paddingTop: insets.top + 12,
-          paddingBottom: insets.bottom + 110,
+          paddingBottom: insets.bottom + 160,
           paddingHorizontal: 20,
           gap: 12,
         }}

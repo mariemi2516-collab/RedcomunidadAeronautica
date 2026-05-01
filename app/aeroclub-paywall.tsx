@@ -108,7 +108,7 @@ import { Feather } from "@expo/vector-icons";
 
     return (
       <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.background }} behavior={Platform.OS === "ios" ? "padding" : undefined}>
-        <KeyboardAwareScrollViewCompat contentContainerStyle={{ padding: 20, paddingBottom: insets.bottom + 40, gap: 16 }}>
+        <KeyboardAwareScrollViewCompat contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 160, gap: 16 }}>
 
           <View style={styles.head}>
             <View style={[styles.iconBubble, { backgroundColor: colors.primary + "26" }]}>

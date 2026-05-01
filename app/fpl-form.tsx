@@ -5,6 +5,8 @@ import * as Sharing from "expo-sharing";
 import React, { useRef, useState } from "react";
 import {
   Alert,
+  Keyboard,
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
@@ -12,6 +14,7 @@ import {
   Switch,
   Text,
   TextInput,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -766,7 +769,13 @@ export default function FplFormScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: colors.background }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
 
       {/* ══ ViewShot OCULTO: siempre renderiza BLANK ══
           Posicionado fuera de pantalla para que no sea visible
@@ -814,7 +823,7 @@ export default function FplFormScreen() {
 
       <ScrollView
         contentContainerStyle={{
-          paddingBottom: insets.bottom + 150,
+          paddingBottom: insets.bottom + 160,
           paddingHorizontal: 14,
           gap: 14,
         }}
@@ -941,8 +950,11 @@ export default function FplFormScreen() {
           <Text style={[styles.btnOutlineTxt, { color: colors.primary }]}>Imprimir</Text>
         </Pressable>
       </View>
-    </View>
-  );
+        </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    );
+  }
 }
 
 /* ───── componentes auxiliares ───── */
@@ -1044,9 +1056,9 @@ const styles = StyleSheet.create({
   labelEs: { fontFamily: "Inter_600SemiBold", fontSize: 10, letterSpacing: 0.5, textTransform: "uppercase" },
   labelEn: { fontFamily: "Inter_400Regular", fontSize: 8.5, letterSpacing: 0.3, opacity: 0.65, marginTop: 1 },
   subLabel: { fontFamily: "Inter_400Regular", fontSize: 9, marginBottom: 4 },
-  input: { fontFamily: "Inter_500Medium", fontSize: 14, paddingHorizontal: 10, paddingVertical: 9, borderWidth: 1, marginTop: 2 },
+  input: { fontFamily: "Inter_500Medium", fontSize: 14, paddingHorizontal: 10, paddingVertical: 12, borderWidth: 1, marginTop: 2, minHeight: 44 },
   chipRow: { flexDirection: "row", gap: 5, flexWrap: "wrap", marginTop: 4 },
-  chip: { paddingHorizontal: 10, paddingVertical: 7, borderWidth: 1 },
+  chip: { paddingHorizontal: 12, paddingVertical: 10, borderWidth: 1, minHeight: 40 },
   chipTxt: { fontFamily: "Inter_600SemiBold", fontSize: 12 },
   infoHint: { padding: 10, marginBottom: 8 },
   infoHintTxt: { fontFamily: "Inter_400Regular", fontSize: 9, lineHeight: 15 },
@@ -1057,9 +1069,9 @@ const styles = StyleSheet.create({
   signLabel: { fontFamily: "Inter_400Regular", fontSize: 10 },
   cardFooter: { borderTopWidth: 1, paddingTop: 10, alignItems: "center" },
   cardFooterTxt: { fontFamily: "Inter_400Regular", fontSize: 9 },
-  bottomBar: { position: "absolute", bottom: 0, left: 0, right: 0, padding: 14, paddingTop: 10, borderTopWidth: 1, flexDirection: "row", gap: 8, flexWrap: "wrap" },
-  btnOutline: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 5, paddingHorizontal: 12, paddingVertical: 10, borderWidth: 1 },
-  btnOutlineTxt: { fontFamily: "Inter_600SemiBold", fontSize: 12 },
-  btnSolid: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, paddingVertical: 10 },
-  btnSolidTxt: { fontFamily: "Inter_600SemiBold", fontSize: 13 },
+  bottomBar: { position: "absolute", bottom: 0, left: 0, right: 0, padding: 16, paddingTop: 12, paddingBottom: 28, borderTopWidth: 1, flexDirection: "row", gap: 8, flexWrap: "wrap" },
+  btnOutline: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 5, paddingHorizontal: 14, paddingVertical: 12, borderWidth: 1, minHeight: 44 },
+  btnOutlineTxt: { fontFamily: "Inter_600SemiBold", fontSize: 13 },
+  btnSolid: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, paddingVertical: 12, minHeight: 44 },
+  btnSolidTxt: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
 });

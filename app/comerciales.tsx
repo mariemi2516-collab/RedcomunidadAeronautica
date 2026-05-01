@@ -9,66 +9,16 @@ import {
   Text,
   View,
 } from "react-native";
-  import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { LinkRow } from "@/components/LinkRow";
+import { aerodromos } from "@/data/aerodromos";
 import { useColors } from "@/hooks/useColors";
 import { comercialesLinks } from "@/lib/links";
 
-const AIRPORTS = [
-  {
-    icao: "SAEZ",
-    iata: "EZE",
-    name: "Ezeiza — Ministro Pistarini",
-    twr: "118.10",
-    lat: -34.8222,
-    lon: -58.5358,
-    wifi: "AA2000_WiFi",
-  },
-  {
-    icao: "SABE",
-    iata: "AEP",
-    name: "Aeroparque — Jorge Newbery",
-    twr: "118.30",
-    lat: -34.5592,
-    lon: -58.4156,
-    wifi: "AA2000_WiFi",
-  },
-  {
-    icao: "SACO",
-    iata: "COR",
-    name: "Córdoba — Pajas Blancas",
-    twr: "118.10",
-    lat: -31.3236,
-    lon: -64.2079,
-    wifi: "AA2000_WiFi",
-  },
-  {
-    icao: "SAZN",
-    iata: "NQN",
-    name: "Neuquén — Presidente Perón",
-    twr: "118.30",
-    lat: -38.949,
-    lon: -68.155,
-    wifi: "AA2000_WiFi",
-  },
-  {
-    icao: "SAZS",
-    iata: "BRC",
-    name: "Bariloche — Teniente Candelaria",
-    twr: "118.10",
-    lat: -41.151,
-    lon: -71.158,
-    wifi: "AA2000_WiFi",
-  },
-];
+const AIRPORTS = aerodromos.filter((a) => a.tipo === "aeropuerto" && a.twr);
 
-function distanceKm(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number,
-): number {
+function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
   const dLon = ((lon2 - lon1) * Math.PI) / 180;
@@ -81,15 +31,17 @@ function distanceKm(
 }
 
 export default function ComercialesScreen() {
-    const colors = useColors();
-    const insets = useSafeAreaInsets();
+  const colors = useColors();
+  const insets = useSafeAreaInsets();
   const [nearest, setNearest] = useState<typeof AIRPORTS[number] | null>(null);
+  const [nearestDist, setNearestDist] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const detectAirport = async () => {
     setLoading(true);
     setError(null);
+    setNearest(null);
     try {
       let lat: number;
       let lon: number;
@@ -109,11 +61,12 @@ export default function ComercialesScreen() {
           return;
         }
         const pos = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
+          accuracy: Location.Accuracy.High,
         });
         lat = pos.coords.latitude;
         lon = pos.coords.longitude;
       }
+
       let best = AIRPORTS[0];
       let bestDist = distanceKm(lat, lon, best.lat, best.lon);
       for (const ap of AIRPORTS.slice(1)) {
@@ -124,6 +77,7 @@ export default function ComercialesScreen() {
         }
       }
       setNearest(best);
+      setNearestDist(bestDist);
     } catch (e) {
       setError("No se pudo obtener la ubicación.");
     } finally {
@@ -135,10 +89,10 @@ export default function ComercialesScreen() {
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
       contentContainerStyle={{
-          padding: 20,
-          paddingBottom: insets.bottom + 120,
-          gap: 18,
-        }}
+        padding: 16,
+        paddingBottom: insets.bottom + 160,
+        gap: 16,
+      }}
     >
       <View
         style={[
@@ -164,7 +118,7 @@ export default function ComercialesScreen() {
               Modo Aeropuerto
             </Text>
             <Text style={[styles.modeDesc, { color: colors.mutedForeground }]}>
-              Detecta tu posición y muestra info de la terminal más cercana.
+              Detecta tu posición y muestra info del aeropuerto más cercano.
             </Text>
           </View>
         </View>
@@ -191,48 +145,25 @@ export default function ComercialesScreen() {
           <Text style={[styles.error, { color: colors.warning }]}>{error}</Text>
         ) : null}
 
-        {nearest ? (
+        {nearest && nearestDist !== null ? (
           <View style={styles.nearestBlock}>
             <Text style={[styles.nearestIcao, { color: colors.primary }]}>
-              {nearest.icao} · {nearest.iata}
+              {nearest.icao}
+              {nearest.iata ? ` · ${nearest.iata}` : ""}
             </Text>
             <Text style={[styles.nearestName, { color: colors.foreground }]}>
-              {nearest.name}
+              {nearest.nombre}
+            </Text>
+            <Text style={[styles.nearestDist, { color: colors.mutedForeground }]}>
+              A {nearestDist.toFixed(1)} km de tu posición
             </Text>
             <View style={styles.detailGrid}>
-              <Detail label="TWR" value={nearest.twr} />
-              <Detail label="WiFi" value={nearest.wifi} />
+              {nearest.twr && <Detail label="TWR" value={nearest.twr} />}
+              <Detail label="Elev" value={`${nearest.elevacionFt} ft`} />
+              <Detail label="Ciudad" value={nearest.ciudad} />
             </View>
           </View>
         ) : null}
-      </View>
-
-      <View style={{ gap: 10 }}>
-        <Text style={[styles.label, { color: colors.mutedForeground }]}>
-          AEROPUERTOS DISPONIBLES
-        </Text>
-        {AIRPORTS.map((a) => (
-          <View
-            key={a.icao}
-            style={[
-              styles.apRow,
-              {
-                backgroundColor: colors.card,
-                borderColor: colors.border,
-                borderRadius: colors.radius - 2,
-              },
-            ]}
-          >
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.apName, { color: colors.foreground }]}>
-                {a.name}
-              </Text>
-              <Text style={[styles.apMeta, { color: colors.mutedForeground }]}>
-                {a.icao} · {a.iata} · TWR {a.twr}
-              </Text>
-            </View>
-          </View>
-        ))}
       </View>
 
       {comercialesLinks.map((sec) => (
@@ -313,6 +244,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   nearestName: { fontFamily: "Inter_600SemiBold", fontSize: 16 },
+  nearestDist: { fontFamily: "Inter_400Regular", fontSize: 12 },
   detailGrid: { flexDirection: "row", gap: 8, marginTop: 8 },
   detail: {
     flex: 1,
@@ -331,13 +263,4 @@ const styles = StyleSheet.create({
     fontSize: 11,
     letterSpacing: 1.8,
   },
-  apRow: {
-    padding: 14,
-    borderWidth: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  apName: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
-  apMeta: { fontFamily: "Inter_400Regular", fontSize: 12, marginTop: 3 },
 });

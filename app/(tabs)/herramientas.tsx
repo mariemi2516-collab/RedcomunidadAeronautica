@@ -73,7 +73,7 @@ export default function HerramientasScreen() {
       style={{ flex: 1, backgroundColor: colors.background }}
       contentContainerStyle={{
         paddingTop: insets.top + 12,
-        paddingBottom: insets.bottom + 110,
+        paddingBottom: insets.bottom + 160,
         paddingHorizontal: 20,
         gap: 12,
       }}

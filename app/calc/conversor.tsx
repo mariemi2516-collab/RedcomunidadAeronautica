@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { FormField } from "@/components/FormField";
 import { useColors } from "@/hooks/useColors";
@@ -52,6 +53,7 @@ const UNITS: Record<Category, { id: string; label: string; toBase: (v: number) =
 
 export default function ConversorScreen() {
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   const [cat, setCat] = useState<Category>("longitud");
   const [from, setFrom] = useState("ft");
   const [to, setTo] = useState("m");
@@ -63,11 +65,17 @@ export default function ConversorScreen() {
   const result = toU.fromBase(fromU.toBase(Number(val) || 0));
 
   return (
-    <ScrollView
+    <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ padding: 20, gap: 14 }}
-      keyboardShouldPersistTaps="handled"
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 160, gap: 14 }}
+          keyboardShouldPersistTaps="handled"
+        >
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
         {CATS.map((c) => {
           const active = c.id === cat;
@@ -181,15 +189,19 @@ export default function ConversorScreen() {
         </Text>
       </View>
     </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   catChip: {
     paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 999,
     borderWidth: 1,
+    minHeight: 40,
+    justifyContent: "center",
   },
   catText: { fontFamily: "Inter_600SemiBold", fontSize: 12 },
   smallLabel: {
@@ -199,7 +211,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   unitRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
-  unitChip: { paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8 },
+  unitChip: { paddingHorizontal: 12, paddingVertical: 10, borderRadius: 8, minHeight: 36, justifyContent: "center" },
   unitText: { fontFamily: "Inter_600SemiBold", fontSize: 12 },
   results: { padding: 20, borderWidth: 1, gap: 8, alignItems: "center" },
   resLabel: {

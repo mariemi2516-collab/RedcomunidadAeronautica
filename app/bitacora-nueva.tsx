@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { FormField } from "@/components/FormField";
@@ -74,11 +74,17 @@ export default function BitacoraNuevaScreen() {
   };
 
   return (
-    <ScrollView
+    <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: colors.background }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+      style={{ flex: 1 }}
       contentContainerStyle={{
-        padding: 20,
-        paddingBottom: insets.bottom + 40,
+        padding: 16,
+        paddingBottom: insets.bottom + 160,
         gap: 14,
       }}
       keyboardShouldPersistTaps="handled"
@@ -171,6 +177,8 @@ export default function BitacoraNuevaScreen() {
 
       <PrimaryButton label="Guardar vuelo" icon="check" onPress={save} full />
     </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

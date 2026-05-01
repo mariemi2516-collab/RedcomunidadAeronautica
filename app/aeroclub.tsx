@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { EmptyState } from "@/components/EmptyState";
   import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
@@ -26,6 +27,7 @@ const SECTIONS: { id: Section; label: string; icon: React.ComponentProps<typeof 
 
 export default function AeroclubScreen() {
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   const [active, setActive] = useState<Section>("vencimientos");
 
   return (
@@ -78,13 +80,13 @@ export default function AeroclubScreen() {
       </View>
 
       <ScrollView
-        contentContainerStyle={{ padding: 20, paddingTop: 0, gap: 14 }}
+        contentContainerStyle={{ padding: 16, paddingTop: 0, paddingBottom: insets.bottom + 160, gap: 14 }}
         keyboardShouldPersistTaps="handled"
       >
         {active === "vencimientos" ? <VencimientosTab /> : null}
         {active === "novedades" ? <NovedadesTab /> : null}
         {active === "reservas" ? <ReservasTab /> : null}
-      </KeyboardAwareScrollViewCompat>
+      </ScrollView>
     </View>
   );
 }

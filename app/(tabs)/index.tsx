@@ -57,7 +57,7 @@ import { Feather } from "@expo/vector-icons";
     return (
       <ScrollView
         style={{ flex: 1, backgroundColor: colors.background }}
-        contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: insets.bottom + 110 }}
+        contentContainerStyle={{ paddingTop: insets.top + 12, paddingBottom: insets.bottom + 160 }}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
@@ -65,7 +65,7 @@ import { Feather } from "@expo/vector-icons";
             <Text style={[styles.eyebrow, { color: colors.primary }]}>AeroUtil · Cockpit</Text>
             <Text style={[styles.greeting, { color: colors.foreground }]}>{greeting}.</Text>
           </View>
-          <Pressable onPress={() => router.push("/disclaimer")} hitSlop={10}
+          <Pressable onPress={() => router.push("/disclaimer")} hitSlop={12}
             style={({ pressed }) => [styles.headerBtn, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius - 4, opacity: pressed ? 0.7 : 1 }]}>
             <Feather name="info" size={18} color={colors.foreground} />
           </Pressable>
