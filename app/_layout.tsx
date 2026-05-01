@@ -47,9 +47,13 @@ function RootLayoutNav() {
       <Stack.Screen name="trafico" options={{ title: "Tráfico en vivo" }} />
       <Stack.Screen name="aeropuertos" options={{ title: "Aeródromos" }} />
       <Stack.Screen name="aeroclub" options={{ title: "Mi aeroclub" }} />
+        <Stack.Screen
+          name="aeroclub-paywall"
+          options={{ title: "Mi aeroclub · Acceso" }}
+        />
       <Stack.Screen name="biblioteca" options={{ title: "Biblioteca normativa" }} />
       <Stack.Screen name="comerciales" options={{ title: "Vuelos comerciales" }} />
-      <Stack.Screen name="directorio" options={{ title: "Directorio operativo" }} />
+      <Stack.Screen name="directorio" options={{ title: "Directorio / Servicios" }} />
       <Stack.Screen
         name="bitacora-nueva"
         options={{ presentation: "modal", title: "Nuevo vuelo" }}
