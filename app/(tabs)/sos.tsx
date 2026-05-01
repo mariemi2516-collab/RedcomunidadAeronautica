@@ -7,7 +7,6 @@ import {
   Alert,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -16,6 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { EmptyState } from "@/components/EmptyState";
 import { FormField } from "@/components/FormField";
+  import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { useAppData } from "@/contexts/AppDataContext";
 import { useColors } from "@/hooks/useColors";
@@ -226,7 +226,7 @@ export default function SosScreen() {
           />
         </View>
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollViewCompat>
   );
 }
 

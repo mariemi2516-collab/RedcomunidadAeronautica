@@ -9,6 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
+  import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { LinkRow } from "@/components/LinkRow";
 import { useColors } from "@/hooks/useColors";
@@ -80,7 +81,8 @@ function distanceKm(
 }
 
 export default function ComercialesScreen() {
-  const colors = useColors();
+    const colors = useColors();
+    const insets = useSafeAreaInsets();
   const [nearest, setNearest] = useState<typeof AIRPORTS[number] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -132,7 +134,11 @@ export default function ComercialesScreen() {
   return (
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ padding: 20, gap: 18 }}
+      contentContainerStyle={{
+          padding: 20,
+          paddingBottom: insets.bottom + 120,
+          gap: 18,
+        }}
     >
       <View
         style={[

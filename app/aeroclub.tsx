@@ -9,10 +9,12 @@ import {
 } from "react-native";
 
 import { EmptyState } from "@/components/EmptyState";
+  import { KeyboardAwareScrollViewCompat } from "@/components/KeyboardAwareScrollViewCompat";
 import { FormField } from "@/components/FormField";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { useAppData } from "@/contexts/AppDataContext";
 import { useColors } from "@/hooks/useColors";
+  import { STORAGE_KEYS, loadJSON, saveJSON } from "@/lib/storage";
 
 type Section = "vencimientos" | "novedades" | "reservas";
 
@@ -82,7 +84,7 @@ export default function AeroclubScreen() {
         {active === "vencimientos" ? <VencimientosTab /> : null}
         {active === "novedades" ? <NovedadesTab /> : null}
         {active === "reservas" ? <ReservasTab /> : null}
-      </ScrollView>
+      </KeyboardAwareScrollViewCompat>
     </View>
   );
 }
