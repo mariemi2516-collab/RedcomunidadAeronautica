@@ -9,7 +9,9 @@ export const STORAGE_KEYS = {
   sosContacts: "@aeroar/sos-contacts",
   pilotProfile: "@aeroar/pilot-profile",
   metarFavs: "@aeroar/metar-favoritos",
-} as const;
+  aircraftProfile: "@aeroar/aircraft-profile-v1",
+    aeroclubAccess: "@aeroar/aeroclub-access-v1",
+  } as const;
 
 export async function loadJSON<T>(key: string, fallback: T): Promise<T> {
   try {
