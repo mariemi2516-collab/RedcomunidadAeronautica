@@ -27,10 +27,10 @@ type TabId = DirectorioCategoria | "combustible-calc" | "todos-aeropuertos";
 const TABS: { id: TabId; label: string }[] = [
   ...directorioCategorias.map((c) => ({ id: c.id, label: c.label })),
   { id: "todos-aeropuertos", label: "Aeropuertos" },
-  { id: "combustible-calc", label: "Combustible" },
+  { id: "combustible-calc", label: "Calculadora" },
 ];
 
-const MIN_TAP = 44;
+const MIN_TAP = 20;
 
 export default function DirectorioScreen() {
   const colors = useColors();
@@ -403,7 +403,7 @@ function AllAirports({ callOrOpen }: { callOrOpen: (raw: string) => void }) {
 
 const styles = StyleSheet.create({
   catsRow: { paddingHorizontal: 16, paddingVertical: 14, gap: 8 },
-  cat: { paddingHorizontal: 16, paddingVertical: 10, alignItems: "center", justifyContent: "center", borderRadius: 999 },
+  cat: { paddingHorizontal: 14, alignItems: "center", justifyContent: "center", borderRadius: 999 },
   catText: { fontFamily: "Inter_600SemiBold", fontSize: 12, includeFontPadding: false, textAlignVertical: "center" },
   row: { flexDirection: "row", alignItems: "center", padding: 14, borderWidth: 1, gap: 12 },
   name: { fontFamily: "Inter_600SemiBold", fontSize: 14 },

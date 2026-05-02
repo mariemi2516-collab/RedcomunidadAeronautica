@@ -234,7 +234,6 @@ export const comercialesLinks: LinkSection[] = [
 ];
 
 export const directorioCategorias = [
-  { id: "combustibles", label: "Combustibles" },
   { id: "talleres", label: "Talleres Aeronáuticos" },
   { id: "servicios", label: "Servicios" },
 ] as const;
@@ -245,7 +244,7 @@ export const directorioItems: Record<
   DirectorioCategoria,
   { id: string; nombre: string; ubicacion: string; contacto: string; telUrl: string }[]
 > = {
-  Directorio: [
+  combustibles: [
     {
       id: "aep",
       nombre: "AA2000 — AEP Aeroparque",
