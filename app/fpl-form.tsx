@@ -955,7 +955,6 @@ export default function FplFormScreen() {
       </KeyboardAvoidingView>
     );
   }
-}
 
 /* ───── componentes auxiliares ───── */
 
