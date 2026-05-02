@@ -26,32 +26,14 @@ export const planificacionLinks: LinkSection[] = [
         route: "/fpl-form",
         badge: "Editable",
       },
-      {
-        id: "eana-fpl",
-        title: "EANA — Plan de Vuelo Electrónico",
-        subtitle: "Servicios EANA",
-        url: "https://www.eana.com.ar/servicios",
-        subtitle: "eana.com.ar",
-        url: "https://eana.com.ar/servicios",
-        badge: "Oficial",
-      },
-      {
-        id: "notam-anac",
-        title: "NOTAM Argentina",
-        subtitle: "Consulta de avisos a aviadores",
-        url: "https://ais.anac.gob.ar/notam",
-        badge: "AIS",
-      },
-      // IFIS NOTAM — enlace roto al momento de la última revisión.
-      // Mantener comentado hasta confirmar URL vigente de EANA.
-      // {
-      //   id: "ifis-notam",
-      //   title: "IFIS NOTAM — EANA",
-      //   subtitle: "Información integrada de vuelo",
-      //   url: "https://ifis.eana.com.ar/notam",
-      //   badge: "Oficial",
-      // },
-      {
+       {
+        id: "alfa-form",
+        title: "formulario Alfa",
+        subtitle: "Completá, descargá en blanco o con datos",
+        url: "",
+        route: "/alfa-form",
+        badge: "Editable",
+      },    {
         id: "aip",
         title: "AIP Argentina",
         subtitle: "Cartas, manuales y publicación aeronáutica",
