@@ -196,7 +196,7 @@ function FuelCalculator() {
             paddingHorizontal: 16,
             paddingTop: 8,
             paddingBottom: insets.bottom + 160,
-            gap: 16,
+            gap: 10,
           }}
           keyboardShouldPersistTaps="handled"
         >

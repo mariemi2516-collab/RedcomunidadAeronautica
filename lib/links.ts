@@ -245,7 +245,7 @@ export const directorioItems: Record<
   DirectorioCategoria,
   { id: string; nombre: string; ubicacion: string; contacto: string; telUrl: string }[]
 > = {
-  combustibles: [
+  Directorio: [
     {
       id: "aep",
       nombre: "AA2000 — AEP Aeroparque",
