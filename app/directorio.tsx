@@ -30,12 +30,12 @@ const TABS: { id: TabId; label: string }[] = [
   { id: "combustible-calc", label: "Calculadora" },
 ];
 
-const MIN_TAP = 20;
+const MIN_TAP = 44;
 
 export default function DirectorioScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
-  const [active, setActive] = useState<TabId>("combustibles");
+  const [active, setActive] = useState<TabId>("servicios");
   const items = active !== "combustible-calc" && active !== "todos-aeropuertos"
     ? directorioItems[active]
     : [];
@@ -53,6 +53,7 @@ export default function DirectorioScreen() {
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView
         horizontal
+        style={styles.catsScroller}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.catsRow}
       >
@@ -98,7 +99,7 @@ export default function DirectorioScreen() {
           style={{ flex: 1 }}
           contentContainerStyle={{
             paddingHorizontal: 16,
-            paddingTop: 8,
+            paddingTop: 4,
             paddingBottom: insets.bottom + 160,
             gap: 12,
           }}
@@ -194,7 +195,7 @@ function FuelCalculator() {
           style={{ flex: 1 }}
           contentContainerStyle={{
             paddingHorizontal: 16,
-            paddingTop: 8,
+            paddingTop: 4,
             paddingBottom: insets.bottom + 160,
             gap: 10,
           }}
@@ -341,7 +342,7 @@ function AllAirports({ callOrOpen }: { callOrOpen: (raw: string) => void }) {
       style={{ flex: 1 }}
       contentContainerStyle={{
         paddingHorizontal: 16,
-        paddingTop: 8,
+        paddingTop: 4,
         paddingBottom: insets.bottom + 160,
         gap: 12,
       }}
@@ -402,9 +403,28 @@ function AllAirports({ callOrOpen }: { callOrOpen: (raw: string) => void }) {
 }
 
 const styles = StyleSheet.create({
-  catsRow: { paddingHorizontal: 16, paddingVertical: 14, gap: 8 },
-  cat: { paddingHorizontal: 14, alignItems: "center", justifyContent: "center", borderRadius: 999 },
-  catText: { fontFamily: "Inter_600SemiBold", fontSize: 12, includeFontPadding: false, textAlignVertical: "center" },
+  catsScroller: { flexGrow: 0, flexShrink: 0, maxHeight: 64 },
+  catsRow: {
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 8,
+    gap: 8,
+    alignItems: "center",
+  },
+  cat: {
+    width: 132,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 999,
+    paddingHorizontal: 10,
+  },
+  catText: {
+    fontFamily: "Inter_600SemiBold",
+    fontSize: 12,
+    includeFontPadding: false,
+    textAlign: "center",
+  },
   row: { flexDirection: "row", alignItems: "center", padding: 14, borderWidth: 1, gap: 12 },
   name: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
   location: { fontFamily: "Inter_400Regular", fontSize: 13, marginTop: 3 },

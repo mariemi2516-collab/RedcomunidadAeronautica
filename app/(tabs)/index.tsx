@@ -111,7 +111,7 @@ import { Feather } from "@expo/vector-icons";
           </View>
           <View style={styles.grid}>
             <Tile label="Vuelos comerciales" icon="briefcase" href="/comerciales" accent="#60A5FA" />
-            <Tile label="Directorio/Servicios" icon="phone" href="/directorio" accent="#FB923C" />
+            <Tile label="Directorio / Servicios" icon="phone" href="/directorio" accent="#FB923C" />
           </View>
         </View>
 

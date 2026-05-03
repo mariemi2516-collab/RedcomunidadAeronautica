@@ -1,8 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import { Paths, File as ExpoFile } from "expo-file-system";
-import * as Print from "expo-print";
-import * as Sharing from "expo-sharing";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Alert,
   Keyboard,
@@ -18,8 +15,14 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ViewShot from "react-native-view-shot";
-
+import {
+  pdfChecks,
+  pdfDocument,
+  pdfField,
+  pdfGrid,
+  pdfSection,
+  printPdfHtml,
+} from "@/lib/formPdf";
 import { useColors } from "@/hooks/useColors";
 
 /* ───── constantes ───── */
@@ -117,7 +120,7 @@ const BLANK: FplData = {
 /* ═══════════════════════════════════════════
    COMPONENTE DEL FORMULARIO (reutilizable)
    Se usa tanto para el form activo como para
-   el ViewShot oculto que captura el blanco
+   el PDF en blanco generado desde los datos vacios
 ═══════════════════════════════════════════ */
 function FplFormContent({
   fpl,
@@ -646,6 +649,89 @@ function FplFormContent({
   );
 }
 
+
+function buildFplPdfHtml(fpl: FplData) {
+  const body = [
+    pdfSection(
+      "Datos del vuelo",
+      pdfGrid(
+        pdfField("Fecha", fpl.date) +
+          pdfField("7 Identificacion de la aeronave", fpl.aircraftId) +
+          pdfField("8 Reglas de vuelo", fpl.flightRules) +
+          pdfField("Tipo de vuelo", fpl.flightType) +
+          pdfField("9 Numero", fpl.number) +
+          pdfField("Tipo de aeronave", fpl.aircraftType) +
+          pdfField("Estela turbulenta", fpl.wakeCat) +
+          pdfField("Equipo A", fpl.equipmentA) +
+          pdfField("Equipo B", fpl.equipmentB) +
+          pdfField("13 Aerodromo de salida", fpl.departureAd) +
+          pdfField("Hora UTC", fpl.departureTime) +
+          pdfField("Velocidad crucero", fpl.cruisingSpeed) +
+          pdfField("Nivel", fpl.level) +
+          pdfField("15 Ruta", fpl.route, 4),
+      ),
+    ),
+    pdfSection(
+      "Destino y alternativas",
+      pdfGrid(
+        pdfField("16 Aerodromo de destino", fpl.destinationAd) +
+          pdfField("Duracion total EET", fpl.totalEet) +
+          pdfField("Alternativa", fpl.altnAd) +
+          pdfField("2da alternativa", fpl.altn2Ad),
+      ),
+    ),
+    pdfSection("18 Otra informacion", pdfGrid(pdfField("Other information", fpl.otherInfo, 4))),
+    pdfSection(
+      "19 Informacion suplementaria",
+      pdfGrid(
+        pdfField("Autonomia HHMM", fpl.endurance) +
+          pdfField("Personas a bordo", fpl.personsOnBoard) +
+          pdfField("Cantidad de botes", fpl.dinghiesCount) +
+          pdfField("Capacidad de botes", fpl.dinghiesCapacity) +
+          pdfField("Color de botes", fpl.dinghiesColour, 2) +
+          pdfField("Color y marcas de aeronave", fpl.aircraftColour, 2) +
+          pdfField("Observaciones", fpl.remarks, 4),
+      ) +
+        pdfSection(
+          "Radio de emergencia",
+          pdfChecks([
+            { label: "UHF", checked: fpl.radioUhf },
+            { label: "VHF", checked: fpl.radioVhf },
+            { label: "ELT", checked: fpl.radioElt },
+          ]),
+        ) +
+        pdfSection(
+          "Equipo de supervivencia",
+          pdfChecks([
+            { label: "Polar", checked: fpl.survivalPolar },
+            { label: "Desierto", checked: fpl.survivalDesert },
+            { label: "Maritimo", checked: fpl.survivalMaritime },
+            { label: "Selva", checked: fpl.survivalJungle },
+          ]),
+        ) +
+        pdfSection(
+          "Chalecos y botes",
+          pdfChecks([
+            { label: "Luz", checked: fpl.jacketsLight },
+            { label: "Fluorescente", checked: fpl.jacketsFluores },
+            { label: "UHF", checked: fpl.jacketsUhf },
+            { label: "VHF", checked: fpl.jacketsVhf },
+            { label: "Botes con cubierta", checked: fpl.dinghiesCover },
+          ]),
+        ) +
+        pdfGrid(pdfField("Piloto al mando", fpl.pilotInCommand, 2) + pdfField("Presentado por", fpl.filedBy, 2)) +
+        '<div class="signature">Firma / Sign here</div>',
+    ),
+  ].join("");
+
+  return pdfDocument(
+    "Plan de Vuelo / Flight Plan (FPL)",
+    "Formulario ICAO editable generado desde AeroUtil",
+    body,
+    "AeroUtil - Plan de Vuelo ICAO - Formulario FPL",
+  );
+}
+
 /* ═══════════════════════════════════════════
    PANTALLA PRINCIPAL
 ═══════════════════════════════════════════ */
@@ -655,114 +741,17 @@ export default function FplFormScreen() {
   const [fpl, setFpl] = useState<FplData>(BLANK);
   const [capturing, setCapturing] = useState(false);
 
-  // ViewShot del formulario activo (con datos)
-  const shotFilled = useRef<ViewShot>(null);
-  // ViewShot del formulario en blanco (siempre renderizado, fuera de pantalla)
-  const shotBlank = useRef<ViewShot>(null);
-
   const set = <K extends keyof FplData>(key: K, val: FplData[K]) =>
     setFpl((p) => ({ ...p, [key]: val }));
 
-  /* ── helper: compartir/descargar una URI ── */
-  const shareUri = async (uri: string, filename: string) => {
-    if (Platform.OS === "web") {
-      const blob = await (await fetch(uri)).blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
-      Alert.alert("Éxito", "Imagen descargada correctamente.");
-    } else {
-      const destFile = new ExpoFile(Paths.cache, filename);
-      await new ExpoFile(uri).copy(destFile);
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(destFile.uri, {
-          mimeType: "image/png",
-          dialogTitle: "Compartir Plan de Vuelo",
-          UTI: "public.png",
-        });
-      } else {
-        Alert.alert("Guardado", `Archivo en:\n${destFile.uri}`);
-      }
-    }
-  };
 
-  /* ── helper: imprimir una URI ── */
-  const printUri = async (uri: string, title: string) => {
-    if (Platform.OS === "web") {
-      const blob = await (await fetch(uri)).blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const w = window.open();
-      if (w) {
-        w.document.write(`
-          <html><head><title>${title}</title>
-          <style>
-            body{margin:0;padding:20px;display:flex;justify-content:center;background:#fff}
-            img{max-width:100%;height:auto}
-            @media print{body{padding:0}img{width:100%}}
-          </style></head>
-          <body>
-            <img src="${blobUrl}"
-              onload="window.print();setTimeout(()=>window.close(),1500)"/>
-          </body></html>
-        `);
-        w.document.close();
-      }
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 8000);
-    } else {
-      await Print.printAsync({
-        html: `<html><body style="margin:0;padding:0;background:#fff">
-          <img src="${uri}" style="width:100%;height:auto"/>
-        </body></html>`,
-      });
-    }
-  };
-
-  /* ── descargar lleno ── */
-  const downloadFilled = async () => {
-    try {
-      setCapturing(true);
-      if (!shotFilled.current?.capture) throw new Error("ref no disponible");
-      const uri = await shotFilled.current.capture();
-      const filename = `FPL_${fpl.aircraftId || "lleno"}_${fpl.date || "sin-fecha"}.png`;
-      await shareUri(uri, filename);
-    } catch (e) {
-      console.error(e);
-      Alert.alert("Error", "No se pudo generar la imagen del formulario.");
-    } finally {
-      setCapturing(false);
-    }
-  };
-
-  /* ── descargar en blanco ── */
-  const downloadBlank = async () => {
-    try {
-      setCapturing(true);
-      if (!shotBlank.current?.capture) throw new Error("ref no disponible");
-      const uri = await shotBlank.current.capture();
-      await shareUri(uri, "FPL_en-blanco.png");
-    } catch (e) {
-      console.error(e);
-      Alert.alert("Error", "No se pudo generar la imagen en blanco.");
-    } finally {
-      setCapturing(false);
-    }
-  };
-
-  /* ── imprimir lleno ── */
   const printFilled = async () => {
     try {
       setCapturing(true);
-      if (!shotFilled.current?.capture) throw new Error("ref no disponible");
-      const uri = await shotFilled.current.capture();
-      await printUri(uri, `FPL - ${fpl.aircraftId || "Plan de Vuelo"}`);
+      await printPdfHtml(buildFplPdfHtml(fpl));
     } catch (e) {
       console.error(e);
-      Alert.alert("Error", "No se pudo preparar la impresión.");
+      Alert.alert("Error", "No se pudo preparar la impresion.");
     } finally {
       setCapturing(false);
     }
@@ -776,50 +765,6 @@ export default function FplFormScreen() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
-
-      {/* ══ ViewShot OCULTO: siempre renderiza BLANK ══
-          Posicionado fuera de pantalla para que no sea visible
-          pero sí renderizado (necesario para capture()) */}
-      <View
-        style={{
-          position: "absolute",
-          top: -9999,
-          left: 0,
-          width: 390,
-          opacity: 0,
-          pointerEvents: "none",
-        }}
-        // @ts-ignore - pointerEvents no tipado en todas las versiones
-      >
-        <ViewShot
-          ref={shotBlank}
-          options={{ format: "png", quality: 1, result: "tmpfile" }}
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.card,
-              borderColor: colors.border,
-              borderRadius: colors.radius,
-            },
-          ]}
-        >
-          <View
-            style={[
-              styles.cardHeader,
-              {
-                backgroundColor: colors.primary,
-                borderTopLeftRadius: colors.radius,
-                borderTopRightRadius: colors.radius,
-              },
-            ]}
-          >
-            <Text style={[styles.cardHeaderTxt, { color: colors.primaryForeground }]}>
-              PLAN DE VUELO — FLIGHT PLAN (FPL)
-            </Text>
-          </View>
-          <FplFormContent fpl={BLANK} colors={colors} readonly />
-        </ViewShot>
-      </View>
 
       <ScrollView
         contentContainerStyle={{
@@ -835,14 +780,12 @@ export default function FplFormScreen() {
             PLAN DE VUELO / FLIGHT PLAN
           </Text>
           <Text style={[styles.pageSub, { color: colors.mutedForeground }]}>
-            Formulario ICAO · Completá, descargá, imprimí y compartí
+            Formulario ICAO - Completa e imprimi
           </Text>
         </View>
 
-        {/* ══ ViewShot VISIBLE: formulario con datos ══ */}
-        <ViewShot
-          ref={shotFilled}
-          options={{ format: "png", quality: 1, result: "tmpfile" }}
+        {/* formulario con datos */}
+        <View
           style={[
             styles.card,
             {
@@ -867,7 +810,7 @@ export default function FplFormScreen() {
             </Text>
           </View>
           <FplFormContent fpl={fpl} colors={colors} onSet={set} />
-        </ViewShot>
+        </View>
       </ScrollView>
 
       {/* ══ BARRA INFERIOR ══ */}
@@ -895,42 +838,6 @@ export default function FplFormScreen() {
         >
           <Feather name="trash-2" size={15} color={colors.mutedForeground} />
           <Text style={[styles.btnOutlineTxt, { color: colors.foreground }]}>Limpiar</Text>
-        </Pressable>
-
-        {/* En blanco */}
-        <Pressable
-          onPress={downloadBlank}
-          disabled={capturing}
-          style={({ pressed }) => [
-            styles.btnOutline,
-            {
-              borderColor: colors.primary,
-              borderRadius: colors.radius - 6,
-              opacity: capturing ? 0.45 : pressed ? 0.75 : 1,
-            },
-          ]}
-        >
-          <Feather name="file" size={15} color={colors.primary} />
-          <Text style={[styles.btnOutlineTxt, { color: colors.primary }]}>En blanco</Text>
-        </Pressable>
-
-        {/* Descargar */}
-        <Pressable
-          onPress={downloadFilled}
-          disabled={capturing}
-          style={({ pressed }) => [
-            styles.btnSolid,
-            {
-              backgroundColor: colors.primary,
-              borderRadius: colors.radius - 6,
-              opacity: capturing ? 0.45 : pressed ? 0.8 : 1,
-            },
-          ]}
-        >
-          <Feather name="download" size={15} color={colors.primaryForeground} />
-          <Text style={[styles.btnSolidTxt, { color: colors.primaryForeground }]}>
-            {capturing ? "Generando…" : "Descargar"}
-          </Text>
         </Pressable>
 
         {/* Imprimir */}
@@ -1029,7 +936,9 @@ function Tog({
     <View style={styles.togItem}>
       <Switch
         value={value}
-        onValueChange={(v) => !readonly && onToggle(v)}
+        onValueChange={(v) => {
+          if (!readonly) onToggle(v);
+        }}
         trackColor={{ false: colors.border, true: colors.primary + "80" }}
         thumbColor={value ? colors.primary : colors.mutedForeground}
         style={{ transform: [{ scale: 0.78 }] }}
@@ -1069,8 +978,6 @@ const styles = StyleSheet.create({
   cardFooter: { borderTopWidth: 1, paddingTop: 10, alignItems: "center" },
   cardFooterTxt: { fontFamily: "Inter_400Regular", fontSize: 9 },
   bottomBar: { position: "absolute", bottom: 0, left: 0, right: 0, padding: 16, paddingTop: 12, paddingBottom: 28, borderTopWidth: 1, flexDirection: "row", gap: 8, flexWrap: "wrap" },
-  btnOutline: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 5, paddingHorizontal: 14, paddingVertical: 12, borderWidth: 1, minHeight: 44 },
+  btnOutline: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 5, paddingHorizontal: 14, paddingVertical: 12, borderWidth: 1, minHeight: 44 },
   btnOutlineTxt: { fontFamily: "Inter_600SemiBold", fontSize: 13 },
-  btnSolid: { flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, paddingVertical: 12, minHeight: 44 },
-  btnSolidTxt: { fontFamily: "Inter_600SemiBold", fontSize: 14 },
 });

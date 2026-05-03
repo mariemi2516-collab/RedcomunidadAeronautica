@@ -21,7 +21,7 @@ export const planificacionLinks: LinkSection[] = [
       {
         id: "fpl-form",
         title: "Plan de vuelo — Formulario ICAO",
-        subtitle: "Completá, descargá en blanco o con datos",
+        subtitle: "Completa e imprimi el formulario ICAO",
         url: "",
         route: "/fpl-form",
         badge: "Editable",
@@ -37,7 +37,6 @@ export const planificacionLinks: LinkSection[] = [
         id: "aip",
         title: "AIP Argentina",
         subtitle: "Cartas, manuales y publicación aeronáutica",
-        url: "https://ais.anac.gob.ar/aip",
         url: "https://ais.anac.gob.ar/",
         badge: "Oficial",
       },
@@ -149,15 +148,7 @@ export const aeropuertosLinks: LinkSection[] = [
         subtitle: "Base de datos de aeródromos AR",
         url: "https://ais.anac.gob.ar/madhel/",
         badge: "Oficial",
-      },
-      {
-        id: "lad-list",
-        title: "Lista de Aeródromos",
-        subtitle: "Todos los aeródromos argentinos con navegación",
-        url: "",
-        route: "/aeropuertos/lad",
-        badge: "Nuevo",
-      },
+      }
     ],
   },
 ];
@@ -170,7 +161,6 @@ export const bibliotecaLinks: LinkSection[] = [
         id: "raac",
         title: "RAAC — Reglamento Argentino",
         subtitle: "Aviación civil",
-        url: "https://www.argentina.gob.ar/anac/raac-dnar-regulaciones-argentinas-de-aviacion-civil/raac",
         url: "https://www.argentina.gob.ar/anac/regulaciones-argentinas-de-aviacion-civil-raac",
         badge: "ANAC",
       },
@@ -210,7 +200,6 @@ export const comercialesLinks: LinkSection[] = [
       {
         id: "ar",
         title: "Aerolíneas Argentinas",
-        url: "https://www.aerolineas.com.ar/es-us/chequea-el-estado-de-tu-reserva-y-vuelo",
         url: "https://www.aerolineas.com.ar/?activeTab=flightStatus",
       },
       {
@@ -240,10 +229,15 @@ export const directorioCategorias = [
 
 export type DirectorioCategoria = (typeof directorioCategorias)[number]["id"];
 
-export const directorioItems: Record<
-  DirectorioCategoria,
-  { id: string; nombre: string; ubicacion: string; contacto: string; telUrl: string }[]
-> = {
+type DirectorioItem = {
+  id: string;
+  nombre: string;
+  ubicacion: string;
+  contacto: string;
+  telUrl: string;
+};
+
+export const directorioItems: Record<DirectorioCategoria | "combustibles", DirectorioItem[]> = {
   combustibles: [
     {
       id: "aep",

@@ -62,6 +62,8 @@ export function Tile({ label, icon, href, onPress, accent, size = "md" }: TilePr
       <Text
         style={[styles.label, { color: colors.foreground }]}
         numberOfLines={2}
+        adjustsFontSizeToFit
+        minimumFontScale={0.86}
       >
         {label}
       </Text>
@@ -86,8 +88,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: "Inter_600SemiBold",
-    fontSize: 15,
-    letterSpacing: 0.2,
+    fontSize: 14,
+    lineHeight: 17,
+    letterSpacing: 0.1,
+    flexShrink: 1,
   },
   bar: {
     position: "absolute",

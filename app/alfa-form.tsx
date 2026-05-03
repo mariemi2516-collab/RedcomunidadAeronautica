@@ -1,8 +1,5 @@
 import { Feather } from "@expo/vector-icons";
-import { Paths, File as ExpoFile } from "expo-file-system";
-import * as Print from "expo-print";
-import * as Sharing from "expo-sharing";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Alert,
   Keyboard,
@@ -17,8 +14,15 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import ViewShot from "react-native-view-shot";
-
+import {
+  pdfDocument,
+  pdfField,
+  pdfGrid,
+  pdfSection,
+  printPdfHtml,
+  sanitizePdfFileName,
+  sharePdfFromHtml,
+} from "@/lib/formPdf";
 import { useColors } from "@/hooks/useColors";
 
 type AlfaData = {
@@ -342,85 +346,84 @@ function AlfaFormContent({
   );
 }
 
+
+function buildAlfaPdfHtml(data: AlfaData) {
+  const body = [
+    pdfSection(
+      "Datos del piloto",
+      pdfGrid(
+        pdfField("Fecha", data.fecha) +
+          pdfField("Nombre del piloto", data.nombrePiloto, 2) +
+          pdfField("Firma del piloto", data.firmaPiloto),
+      ),
+    ),
+    pdfSection(
+      "Licencia de piloto",
+      pdfGrid(
+        pdfField("Numero de licencia", data.licencia) +
+          pdfField("Clase", data.clase) +
+          pdfField("Vencimiento", data.vencimientoLicencia),
+      ),
+    ),
+    pdfSection(
+      "Aeronave",
+      pdfGrid(
+        pdfField("Matricula", data.matricula) +
+          pdfField("Tipo de aeronave", data.tipoAeronave) +
+          pdfField("Certificado de aeronavegabilidad", data.certificadoAeronavegabilidad) +
+          pdfField("Vencimiento certificado", data.vencimientoCertificado),
+      ),
+    ),
+    pdfSection(
+      "Seguro",
+      pdfGrid(
+        pdfField("Compania", data.seguro) +
+          pdfField("Poliza", data.poliza) +
+          pdfField("Vencimiento seguro", data.vencimientoSeguro),
+      ),
+    ),
+    pdfSection(
+      "Mantenimiento",
+      pdfGrid(
+        pdfField("Ultimo mantenimiento", data.mantenimientoUltimo) +
+          pdfField("Proximo mantenimiento", data.mantenimientoProximo) +
+          pdfField("Observaciones", data.observaciones, 4),
+      ) +
+        '<div class="signature">Firma y sello / Sign here</div>',
+    ),
+  ].join("");
+
+  return pdfDocument(
+    "Formulario Alfa",
+    "Declaracion editable del piloto y aeronave generada desde AeroUtil",
+    body,
+    "AeroUtil - Formulario Alfa - Declaracion del Piloto",
+  );
+}
+
 export default function AlfaFormScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const [data, setData] = useState<AlfaData>(BLANK);
   const [capturing, setCapturing] = useState(false);
 
-  const shotFilled = useRef<ViewShot>(null);
-  const shotBlank = useRef<ViewShot>(null);
-
   const set = <K extends keyof AlfaData>(key: K, val: AlfaData[K]) =>
     setData((p) => ({ ...p, [key]: val }));
-
-  const shareUri = async (uri: string, filename: string) => {
-    if (Platform.OS === "web") {
-      const blob = await (await fetch(uri)).blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
-      Alert.alert("Éxito", "Imagen descargada correctamente.");
-    } else {
-      const destFile = new ExpoFile(Paths.cache, filename);
-      await new ExpoFile(uri).copy(destFile);
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(destFile.uri, {
-          mimeType: "image/png",
-          dialogTitle: "Compartir Formulario Alfa",
-          UTI: "public.png",
-        });
-      } else {
-        Alert.alert("Guardado", `Archivo en:\n${destFile.uri}`);
-      }
-    }
-  };
-
-  const printUri = async (uri: string, title: string) => {
-    if (Platform.OS === "web") {
-      const blob = await (await fetch(uri)).blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const w = window.open();
-      if (w) {
-        w.document.write(`
-          <html><head><title>${title}</title>
-          <style>
-            body{margin:0;padding:20px;display:flex;justify-content:center;background:#fff}
-            img{max-width:100%;height:auto}
-            @media print{body{padding:0}img{width:100%}}
-          </style></head>
-          <body>
-            <img src="${blobUrl}"
-              onload="window.print();setTimeout(()=>window.close(),1500)"/>
-          </body></html>
-        `);
-        w.document.close();
-      }
-      setTimeout(() => URL.revokeObjectURL(blobUrl), 8000);
-    } else {
-      await Print.printAsync({
-        html: `<html><body style="margin:0;padding:0;background:#fff">
-          <img src="${uri}" style="width:100%;height:auto"/>
-        </body></html>`,
-      });
-    }
-  };
 
   const downloadFilled = async () => {
     try {
       setCapturing(true);
-      if (!shotFilled.current?.capture) throw new Error("ref no disponible");
-      const uri = await shotFilled.current.capture();
-      const filename = `ALFA_${data.matricula || "sin-matricula"}_${data.fecha || "sin-fecha"}.png`;
-      await shareUri(uri, filename);
+      const filename = sanitizePdfFileName(
+        "ALFA_" + (data.matricula || "sin-matricula") + "_" + (data.fecha || "sin-fecha") + ".pdf",
+      );
+      await sharePdfFromHtml({
+        html: buildAlfaPdfHtml(data),
+        filename,
+        dialogTitle: "Compartir Formulario Alfa",
+      });
     } catch (e) {
       console.error(e);
-      Alert.alert("Error", "No se pudo generar la imagen del formulario.");
+      Alert.alert("Error", "No se pudo generar el PDF del formulario.");
     } finally {
       setCapturing(false);
     }
@@ -429,12 +432,14 @@ export default function AlfaFormScreen() {
   const downloadBlank = async () => {
     try {
       setCapturing(true);
-      if (!shotBlank.current?.capture) throw new Error("ref no disponible");
-      const uri = await shotBlank.current.capture();
-      await shareUri(uri, "ALFA_en-blanco.png");
+      await sharePdfFromHtml({
+        html: buildAlfaPdfHtml(BLANK),
+        filename: "ALFA_en-blanco.pdf",
+        dialogTitle: "Compartir Formulario Alfa en blanco",
+      });
     } catch (e) {
       console.error(e);
-      Alert.alert("Error", "No se pudo generar la imagen en blanco.");
+      Alert.alert("Error", "No se pudo generar el PDF en blanco.");
     } finally {
       setCapturing(false);
     }
@@ -443,12 +448,10 @@ export default function AlfaFormScreen() {
   const printFilled = async () => {
     try {
       setCapturing(true);
-      if (!shotFilled.current?.capture) throw new Error("ref no disponible");
-      const uri = await shotFilled.current.capture();
-      await printUri(uri, `Formulario Alfa - ${data.matricula || "Declaración"}`);
+      await printPdfHtml(buildAlfaPdfHtml(data));
     } catch (e) {
       console.error(e);
-      Alert.alert("Error", "No se pudo preparar la impresión.");
+      Alert.alert("Error", "No se pudo preparar la impresion.");
     } finally {
       setCapturing(false);
     }
@@ -462,23 +465,6 @@ export default function AlfaFormScreen() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
-      <View
-        style={{ position: "absolute", top: -9999, left: 0, width: 390, opacity: 0, pointerEvents: "none" }}
-      >
-        <ViewShot
-          ref={shotBlank}
-          options={{ format: "png", quality: 1, result: "tmpfile" }}
-          style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius }]}
-        >
-          <View style={[styles.cardHeader, { backgroundColor: colors.primary, borderTopLeftRadius: colors.radius, borderTopRightRadius: colors.radius }]}>
-            <Text style={[styles.cardHeaderTxt, { color: colors.primaryForeground }]}>
-              FORMULARIO ALFA
-            </Text>
-          </View>
-          <AlfaFormContent data={BLANK} colors={colors} readonly />
-        </ViewShot>
-      </View>
-
       <ScrollView
         contentContainerStyle={{ paddingBottom: insets.bottom + 160, paddingHorizontal: 14, gap: 14 }}
         keyboardShouldPersistTaps="handled"
@@ -492,9 +478,7 @@ export default function AlfaFormScreen() {
           </Text>
         </View>
 
-        <ViewShot
-          ref={shotFilled}
-          options={{ format: "png", quality: 1, result: "tmpfile" }}
+        <View
           style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius }]}
         >
           <View style={[styles.cardHeader, { backgroundColor: colors.primary, borderTopLeftRadius: capturing ? 0 : colors.radius, borderTopRightRadius: capturing ? 0 : colors.radius }]}>
@@ -503,7 +487,7 @@ export default function AlfaFormScreen() {
             </Text>
           </View>
           <AlfaFormContent data={data} colors={colors} onSet={set} />
-        </ViewShot>
+        </View>
       </ScrollView>
 
       <View
