@@ -44,7 +44,7 @@ export default function DisclaimerScreen() {
         </Text>
 
         <Text style={[styles.body, { color: colors.mutedForeground }]}>
-          AeroUtil es una herramienta de consulta y centralización de enlaces a
+          Red de Comunidad Aeronautica es una herramienta de consulta y centralización de enlaces a
           fuentes públicas (EANA, ANAC, SMN, JST, etc.). El usuario debe
           verificar siempre la información en las fuentes oficiales antes de
           tomar decisiones operativas.
@@ -58,7 +58,7 @@ export default function DisclaimerScreen() {
 
         <Text style={[styles.body, { color: colors.mutedForeground }]}>
           La seguridad operacional es responsabilidad del piloto al mando.
-          AeroUtil es una herramienta complementaria.
+          Red de Comunidad Aeronautica es una herramienta complementaria.
         </Text>
       </ScrollView>
 

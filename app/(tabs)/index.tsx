@@ -27,6 +27,41 @@ import { Feather } from "@expo/vector-icons";
     return "Buenas noches";
   }
 
+  const shopItems = [
+    {
+      id: "headset",
+      name: "Headset ANR",
+      price: "$ 185.000",
+      detail: "Comunicacion",
+      image:
+        "https://images.unsplash.com/photo-1542296332-2e4473faf563?auto=format&fit=crop&w=600&q=80",
+    },
+    {
+      id: "kneeboard",
+      name: "Rodillera VFR",
+      price: "$ 38.500",
+      detail: "Planificacion",
+      image:
+        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80",
+    },
+    {
+      id: "flashlight",
+      name: "Linterna tactica",
+      price: "$ 42.900",
+      detail: "Cabina",
+      image:
+        "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80",
+    },
+    {
+      id: "documents",
+      name: "Porta documentos",
+      price: "$ 24.900",
+      detail: "Organizacion",
+      image:
+        "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=600&q=80",
+    },
+  ];
+
   export default function DashboardScreen() {
     const colors = useColors();
     const insets = useSafeAreaInsets();
@@ -62,7 +97,7 @@ import { Feather } from "@expo/vector-icons";
       >
         <View style={styles.header}>
           <View style={{ flex: 1 }}>
-            <Text style={[styles.eyebrow, { color: colors.primary }]}>AeroUtil · Cockpit</Text>
+            <Text style={[styles.eyebrow, { color: colors.primary }]}>Red de Comunidad Aeronautica</Text>
             <Text style={[styles.greeting, { color: colors.foreground }]}>{greeting}.</Text>
           </View>
           <Pressable onPress={() => router.push("/disclaimer")} hitSlop={12}
@@ -116,6 +151,40 @@ import { Feather } from "@expo/vector-icons";
         </View>
 
         <View style={styles.section}>
+          <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>TIENDA ONLINE</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.storeList}
+          >
+            {shopItems.map((item) => (
+              <View
+                key={item.id}
+                style={[
+                  styles.productCard,
+                  {
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                    borderRadius: colors.radius - 2,
+                  },
+                ]}
+              >
+                <Image source={{ uri: item.image }} resizeMode="cover" style={styles.productImage} />
+                <View style={styles.productBody}>
+                  <Text style={[styles.productName, { color: colors.foreground }]} numberOfLines={2}>
+                    {item.name}
+                  </Text>
+                  <Text style={[styles.productDetail, { color: colors.mutedForeground }]} numberOfLines={1}>
+                    {item.detail}
+                  </Text>
+                  <Text style={[styles.productPrice, { color: colors.primary }]}>{item.price}</Text>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
+        <View style={styles.section}>
           <Text style={[styles.sectionLabel, { color: colors.mutedForeground }]}>ESTADO RÁPIDO</Text>
           <View style={[styles.statusCard, { backgroundColor: colors.card, borderColor: colors.border, borderRadius: colors.radius }]}>
             <StatusItem icon="calendar" label="Próximos vencimientos" value={proximosVenc.length.toString()}
@@ -130,7 +199,7 @@ import { Feather } from "@expo/vector-icons";
           style={({ pressed }) => [styles.disclaimer, { borderColor: colors.border, backgroundColor: colors.card, borderRadius: colors.radius - 4, opacity: pressed ? 0.85 : 1 }]}>
           <Feather name="shield" size={14} color={colors.primary} />
           <Text style={[styles.disclaimerText, { color: colors.mutedForeground }]}>
-            Verifique siempre la información en fuentes oficiales (EANA / ANAC / SMN). AeroUtil centraliza enlaces, no reemplaza la documentación oficial.
+            Verifique siempre la información en fuentes oficiales (EANA / ANAC / SMN). Red de Comunidad Aeronautica centraliza enlaces, no reemplaza la documentación oficial.
           </Text>
         </Pressable>
       </ScrollView>
@@ -170,6 +239,13 @@ import { Feather } from "@expo/vector-icons";
     section: { paddingHorizontal: 20, marginTop: 22, gap: 12 },
     sectionLabel: { fontFamily: "Inter_600SemiBold", fontSize: 11, letterSpacing: 1.8 },
     grid: { flexDirection: "row", gap: 12 },
+    storeList: { gap: 12, paddingRight: 20 },
+    productCard: { width: 146, borderWidth: 1, overflow: "hidden" },
+    productImage: { width: "100%", height: 92, backgroundColor: "#E5E7EB" },
+    productBody: { padding: 10, gap: 4, minHeight: 104 },
+    productName: { fontFamily: "Inter_600SemiBold", fontSize: 13, lineHeight: 17 },
+    productDetail: { fontFamily: "Inter_400Regular", fontSize: 11, lineHeight: 14 },
+    productPrice: { fontFamily: "Inter_700Bold", fontSize: 15, lineHeight: 18, marginTop: 2 },
     statusCard: { borderWidth: 1, overflow: "hidden" },
     statusItem: { flexDirection: "row", alignItems: "center", gap: 12, padding: 16 },
     statusIcon: { width: 32, height: 32, alignItems: "center", justifyContent: "center" },

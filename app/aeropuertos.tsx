@@ -56,6 +56,46 @@ export default function AeropuertosScreen() {
         gap: 16,
       }}
     >
+      {/* ENLACES OFICIALES */}
+      <View
+        style={[
+          styles.toggleRow,
+          {
+            backgroundColor: colors.card,
+            borderColor: colors.border,
+            borderRadius: colors.radius,
+            minHeight: MIN_TAP,
+          },
+        ]}
+      >
+        <Pressable
+          onPress={() => setShowLinks((v) => !v)}
+          style={styles.toggleBtn}
+        >
+          <Feather
+            name={showLinks ? "chevron-up" : "chevron-down"}
+            size={18}
+            color={colors.mutedForeground}
+          />
+          <Text style={[styles.toggleText, { color: colors.foreground }]}>
+            Enlaces oficiales
+          </Text>
+        </Pressable>
+      </View>
+
+      {showLinks &&
+        aeropuertosLinks.map((sec) => (
+          <View key={sec.title} style={{ gap: 10 }}>
+            <Text style={[styles.label, { color: colors.mutedForeground }]}>
+              {sec.title.toUpperCase()}
+            </Text>
+
+            {sec.items.map((item) => (
+              <LinkRow key={item.id} {...item} />
+            ))}
+          </View>
+        ))}
+
       <View>
         <Text style={[styles.eyebrow, { color: colors.primary }]}>
           LISTA DE AERÓDROMOS
@@ -180,46 +220,6 @@ export default function AeropuertosScreen() {
           </View>
         </>
       )}
-
-      {/* ENLACES OFICIALES */}
-      <View
-        style={[
-          styles.toggleRow,
-          {
-            backgroundColor: colors.card,
-            borderColor: colors.border,
-            borderRadius: colors.radius,
-            minHeight: MIN_TAP,
-          },
-        ]}
-      >
-        <Pressable
-          onPress={() => setShowLinks((v) => !v)}
-          style={styles.toggleBtn}
-        >
-          <Feather
-            name={showLinks ? "chevron-up" : "chevron-down"}
-            size={18}
-            color={colors.mutedForeground}
-          />
-          <Text style={[styles.toggleText, { color: colors.foreground }]}>
-            Enlaces oficiales
-          </Text>
-        </Pressable>
-      </View>
-
-      {showLinks &&
-        aeropuertosLinks.map((sec) => (
-          <View key={sec.title} style={{ gap: 10 }}>
-            <Text style={[styles.label, { color: colors.mutedForeground }]}>
-              {sec.title.toUpperCase()}
-            </Text>
-
-            {sec.items.map((item) => (
-              <LinkRow key={item.id} {...item} />
-            ))}
-          </View>
-        ))}
     </ScrollView>
   );
 }

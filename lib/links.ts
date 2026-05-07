@@ -5,7 +5,16 @@ export type ExternalLink = {
   url: string;
   badge?: string;
   route?: string;
+  phones?: Phone[];
 };
+
+export interface Phone {
+  type: "Teléfono" | "WhatsApp";
+  number: string;      // Formato visual para el usuario
+  actionValue: string; // Formato limpio para tel: o wa.me/
+  hours?: string;
+  subtitle?: string;
+}
 
 export type LinkSection = {
   title: string;
@@ -37,7 +46,7 @@ export const planificacionLinks: LinkSection[] = [
         id: "aip",
         title: "AIP Argentina",
         subtitle: "Cartas, manuales y publicación aeronáutica",
-        url: "https://ais.anac.gob.ar/",
+        url: "https://ais.anac.gob.ar/aip#enr",
         badge: "Oficial",
       },
     ],
@@ -185,7 +194,27 @@ export const bibliotecaLinks: LinkSection[] = [
       },
     ],
   },
+  {
+    title: "Servicios internacionales",
+    items: [
+      {
+        id: "aduana",
+        title: "Aduana Argentina",
+        subtitle: "Trámites y control aduanero",
+        url: "https://www.aduanaargentina.com/",
+        badge: "ADUANA",
+      },
+      {
+        id: "migraciones",
+        title: "Dirección Nacional de Migraciones",
+        subtitle: "Trámites migratorios",
+        url: "https://www.argentina.gob.ar/migraciones",
+        badge: "MIGRACIONES",
+      },
+    ],
+  },
 ];
+
 
 export const comercialesLinks: LinkSection[] = [
   {
@@ -196,22 +225,64 @@ export const comercialesLinks: LinkSection[] = [
         title: "Aeropuertos Argentina 2000",
         subtitle: "Estado de vuelos · servicios",
         url: "https://www.aa2000.com.ar/",
+        phones: [
+          {
+            type: "Teléfono",
+            number: "(54 11) 3987-4150",
+            actionValue: "+541139874150",
+          },
+        ],
       },
       {
         id: "ar",
         title: "Aerolíneas Argentinas",
         url: "https://www.aerolineas.com.ar/?activeTab=flightStatus",
+        phones: [
+          {
+            type: "WhatsApp",
+            number: "+54 9 11 4940-4798",
+            actionValue: "5491149404798",
+            hours: "Lun a Vie de 9 a 18hs",
+          },
+          {
+            type: "Teléfono",
+            number: "+54 (11) 5199-3555",
+            actionValue: "+541151993555",
+            hours: "Lun a Vie de 8 a 20hs · Sáb, Dom y feriados de 8 a 14hs",
+          },
+        ],
       },
       {
         id: "fb",
         title: "Flybondi",
         url: "https://www.flybondi.com/ar",
+        phones: [
+          {
+            type: "Teléfono",
+            number: "0810-555-3592",
+            actionValue: "08105553592",
+            hours: "Lunes a Domingos de 07 a 23hs",
+          },
+        ],
       },
       {
         id: "js",
         title: "JetSmart",
         url: "https://jetsmart.com/ar/es/",
+        phones: [
+          {
+            type: "Teléfono",
+            number: "+54 11 5352 5224",
+            actionValue: "541153525224",
+            subtitle: "WhatsApp de contacto",
+          },
+        ],
       },
+    ],
+  },
+  {
+    title: "Seguimiento de vuelos",
+    items: [
       {
         id: "fa",
         title: "FlightAware",
@@ -221,7 +292,6 @@ export const comercialesLinks: LinkSection[] = [
     ],
   },
 ];
-
 export const directorioCategorias = [
   { id: "talleres", label: "Talleres Aeronáuticos" },
   { id: "servicios", label: "Servicios" },

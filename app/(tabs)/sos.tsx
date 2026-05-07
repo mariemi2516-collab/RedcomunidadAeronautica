@@ -62,7 +62,7 @@ export default function SosScreen() {
       } catch {}
     }
 
-    const piloto = pilot.nombre || "Piloto AeroUtil";
+    const piloto = pilot.nombre || "Piloto Red de Comunidad Aeronautica";
     const matricula = pilot.aeronavePredeterminada
       ? ` - ${pilot.aeronavePredeterminada.toUpperCase()}`
       : "";

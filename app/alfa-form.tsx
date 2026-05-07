@@ -354,7 +354,7 @@ function AlfaFormContent({
 
       <View style={[styles.cardFooter, { borderTopColor: colors.border }]}>
         <Text style={[styles.cardFooterTxt, { color: colors.mutedForeground }]}>
-          AeroUtil · Formulario Alfa · Declaración del Piloto
+          Red de Comunidad Aeronautica · Formulario Alfa · Declaración del Piloto
         </Text>
       </View>
     </View>
@@ -411,9 +411,9 @@ function buildAlfaPdfHtml(data: AlfaData) {
 
   return pdfDocument(
     "Formulario Alfa",
-    "Declaracion editable del piloto y aeronave generada desde AeroUtil",
+    "Declaracion editable del piloto y aeronave generada desde Red de Comunidad Aeronautica",
     body,
-    "AeroUtil - Formulario Alfa - Declaracion del Piloto"
+    "Red de Comunidad Aeronautica - Formulario Alfa - Declaracion del Piloto"
   );
 }
 

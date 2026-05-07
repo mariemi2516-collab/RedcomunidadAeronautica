@@ -27,8 +27,7 @@ type TabId = DirectorioCategoria | "combustible-calc" | "todos-aeropuertos";
 const TABS: { id: TabId; label: string }[] = [
   ...directorioCategorias.map((c) => ({ id: c.id, label: c.label })),
   { id: "todos-aeropuertos", label: "Aeropuertos" },
-  { id: "combustible-calc", label: "Calculadora" },
-];
+  ];
 
 const MIN_TAP = 44;
 
@@ -154,7 +153,7 @@ export default function DirectorioScreen() {
           ))}
           <Text style={[styles.note, { color: colors.mutedForeground }]}>
             Confirmá disponibilidad y precios con el proveedor antes de
-            desplazarte. AeroAR no provee servicios; solo facilita el contacto.
+            desplazarte. Red de Comunidad Aeronautica no provee servicios; solo facilita el contacto.
           </Text>
         </ScrollView>
       )}

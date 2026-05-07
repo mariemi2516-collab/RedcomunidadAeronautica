@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "AeroAR - Aviacion General",
-    "slug": "aeroar-aviacion-general",
+    "name": "red de comunidad aeronautica",
+    "slug": "red-de-comunidad-aeronautica",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -40,7 +40,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "AeroUtil usa tu ubicacion para mostrar aeropuertos cercanos y adjuntarla al mensaje SOS."
+          "locationWhenInUsePermission": "Red de Comunidad Aeronautica usa tu ubicacion para mostrar aeropuertos cercanos y adjuntarla al mensaje SOS."
         }
       ]
     ],

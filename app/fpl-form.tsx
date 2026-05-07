@@ -642,7 +642,7 @@ function FplFormContent({
       {/* Pie */}
       <View style={[styles.cardFooter, { borderTopColor: colors.border }]}>
         <Text style={[styles.cardFooterTxt, { color: colors.mutedForeground }]}>
-          AeroUtil · Plan de Vuelo ICAO · Formulario FPL
+          Red de Comunidad Aeronautica · Plan de Vuelo ICAO · Formulario FPL
         </Text>
       </View>
     </View>
@@ -726,9 +726,9 @@ function buildFplPdfHtml(fpl: FplData) {
 
   return pdfDocument(
     "Plan de Vuelo / Flight Plan (FPL)",
-    "Formulario ICAO editable generado desde AeroUtil",
+    "Formulario ICAO editable generado desde Red de Comunidad Aeronautica",
     body,
-    "AeroUtil - Plan de Vuelo ICAO - Formulario FPL",
+    "Red de Comunidad Aeronautica - Plan de Vuelo ICAO - Formulario FPL",
   );
 }
 

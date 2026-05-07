@@ -62,10 +62,7 @@ function RootLayoutNav() {
         name="planificacion"
         options={{ title: "Planificación y trámites" }}
       />
-      <Stack.Screen
-        name="calc/peso-balance"
-        options={{ title: "Peso y balance" }}
-      />
+      {/*<Stack.Screen name="calc/peso-balance"options={{ title: "Peso y balance" }} />*/}
       <Stack.Screen
         name="calc/densidad-altitud"
         options={{ title: "Densidad de altitud" }}

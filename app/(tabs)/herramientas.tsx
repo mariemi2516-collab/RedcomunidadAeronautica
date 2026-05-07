@@ -22,14 +22,14 @@ type Tool = {
 };
 
 const TOOLS: Tool[] = [
-  {
-    id: "wb",
-    title: "Peso y balance",
-    desc: "Cálculo W&B con CG por estación.",
-    icon: "sliders",
-    href: "/calc/peso-balance",
-    tint: "#FFB547",
-  },
+ // {
+   // id: "wb",
+    //title: "Peso y balance",
+    //desc: "Cálculo W&B con CG por estación.",
+    //icon: "sliders",
+    //href: "/calc/peso-balance",
+    //tint: "#FFB547",
+  //},
   {
     id: "da",
     title: "Densidad de altitud",

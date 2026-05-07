@@ -83,48 +83,6 @@ export default function VuelosScreen() {
               full
             />
 
-            <Card>
-              <View style={styles.fplRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={[styles.fplTitle, { color: colors.foreground }]}>
-                    Plan de vuelo electrónico
-                  </Text>
-                  <Text
-                    style={[styles.fplDesc, { color: colors.mutedForeground }]}
-                  >
-                    Presentación oficial vía EANA.
-                  </Text>
-                </View>
-                <Pressable
-                  onPress={() =>
-                    WebBrowser.openBrowserAsync("https://www.eana.com.ar/servicios")
-                  }
-                  style={({ pressed }) => [
-                    styles.fplBtn,
-                    {
-                      backgroundColor: colors.primary,
-                      borderRadius: colors.radius - 4,
-                      opacity: pressed ? 0.85 : 1,
-                    },
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.fplBtnText,
-                      { color: colors.primaryForeground },
-                    ]}
-                  >
-                    Abrir
-                  </Text>
-                  <Feather
-                    name="external-link"
-                    size={14}
-                    color={colors.primaryForeground}
-                  />
-                </Pressable>
-              </View>
-            </Card>
-
             {bitacora.length > 0 ? (
               <Text
                 style={[styles.listLabel, { color: colors.mutedForeground }]}
