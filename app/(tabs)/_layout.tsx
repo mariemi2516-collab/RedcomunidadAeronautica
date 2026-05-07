@@ -66,11 +66,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="notam"
+        name="comunidad"
         options={{
-          title: "NOTAM",
+          title: "Comunidad",
           tabBarIcon: ({ color }: { color: string }) => (
-            <Feather name="alert-triangle" size={22} color={color} />
+            <Feather name="users" size={22} color={color} />
           ),
         }}
       />
@@ -80,6 +80,16 @@ export default function TabLayout() {
           title: "Calculos",
           tabBarIcon: ({ color }: { color: string }) => (
             <Feather name="sliders" size={22} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="notam"
+        options={{
+          href: null,
+          title: "NOTAM",
+          tabBarIcon: ({ color }: { color: string }) => (
+            <Feather name="alert-triangle" size={22} color={color} />
           ),
         }}
       />

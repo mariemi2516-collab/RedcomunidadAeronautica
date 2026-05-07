@@ -16,6 +16,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AppDataProvider } from "@/contexts/AppDataContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import colors from "@/constants/colors";
 
 SplashScreen.preventAutoHideAsync();
@@ -46,11 +47,23 @@ function RootLayoutNav() {
       <Stack.Screen name="meteorologia" options={{ title: "Meteorología" }} />
       <Stack.Screen name="trafico" options={{ title: "Tráfico en vivo" }} />
       <Stack.Screen name="aeropuertos" options={{ title: "Aeródromos" }} />
-      <Stack.Screen name="aeroclub" options={{ title: "Mi aeroclub" }} />
-        <Stack.Screen
-          name="aeroclub-paywall"
-          options={{ title: "Mi aeroclub · Acceso" }}
-        />
+      <Stack.Screen name="aeroclub" options={{ title: "Mis vencimientos" }} />
+      <Stack.Screen
+        name="aeroclub-paywall"
+        options={{ title: "Acceso premium" }}
+      />
+      <Stack.Screen
+        name="mi-aerodromo"
+        options={{ title: "Mi aeródromo" }}
+      />
+      <Stack.Screen
+        name="comunidad"
+        options={{ title: "Comunidad aeronáutica" }}
+      />
+      <Stack.Screen
+        name="ajustes"
+        options={{ title: "Ajustes" }}
+      />
       <Stack.Screen name="biblioteca" options={{ title: "Biblioteca normativa" }} />
       <Stack.Screen name="comerciales" options={{ title: "Vuelos comerciales" }} />
       <Stack.Screen name="directorio" options={{ title: "Directorio / Servicios" }} />
@@ -100,16 +113,18 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ErrorBoundary>
-        <AppDataProvider>
-          <GestureHandlerRootView
-            style={{ flex: 1, backgroundColor: colors.dark.background }}
-          >
-            <KeyboardProvider>
-              <StatusBar style="light" />
-              <RootLayoutNav />
-            </KeyboardProvider>
-          </GestureHandlerRootView>
-        </AppDataProvider>
+        <AuthProvider>
+          <AppDataProvider>
+            <GestureHandlerRootView
+              style={{ flex: 1, backgroundColor: colors.dark.background }}
+            >
+              <KeyboardProvider>
+                <StatusBar style="light" />
+                <RootLayoutNav />
+              </KeyboardProvider>
+            </GestureHandlerRootView>
+          </AppDataProvider>
+        </AuthProvider>
       </ErrorBoundary>
     </SafeAreaProvider>
   );

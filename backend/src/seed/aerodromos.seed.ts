@@ -1,0 +1,32 @@
+import type { Aerodromo } from "../models";
+
+export const seedAerodromos: Aerodromo[] = [
+  {
+    id: "seed-aero-morón",
+    ownerId: "seed-aero-morón",
+    nombre: "Aero Club Morón",
+    icao: "SADM",
+    ciudad: "Morón",
+    provincia: "Buenos Aires",
+    pista: "01/19 · 1500 m · asfalto",
+    frecuencia: "118.50",
+    contacto: "+54 11 4628-1100",
+    descripcion:
+      "Escuela de vuelo, hangares disponibles y servicios de combustible 100LL.",
+    updatedAt: new Date("2025-02-01T12:00:00Z").toISOString(),
+  },
+  {
+    id: "seed-aero-rosario",
+    ownerId: "seed-aero-rosario",
+    nombre: "Aero Club Rosario",
+    icao: "SAAR",
+    ciudad: "Rosario",
+    provincia: "Santa Fe",
+    pista: "02/20 · 2400 m · asfalto",
+    frecuencia: "118.70",
+    contacto: "+54 341 451-3700",
+    descripcion:
+      "Operaciones diurnas y nocturnas, briefing meteorológico in situ.",
+    updatedAt: new Date("2025-02-01T12:00:00Z").toISOString(),
+  },
+];

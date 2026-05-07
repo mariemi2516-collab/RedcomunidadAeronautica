@@ -1,0 +1,28 @@
+[
+  {
+    "id": "seed-venc-1",
+    "userId": "seed-piloto-juan",
+    "titulo": "CMA Clase 2",
+    "tipo": "CMA",
+    "fechaVencimiento": "2026-06-21",
+    "notas": "Renovar en INMAE.",
+    "createdAt": "2025-02-01T12:00:00.000Z"
+  },
+  {
+    "id": "seed-venc-2",
+    "userId": "seed-piloto-juan",
+    "titulo": "Habilitación nocturna",
+    "tipo": "Habilitacion",
+    "fechaVencimiento": "2026-09-04",
+    "createdAt": "2025-02-01T12:00:00.000Z"
+  },
+  {
+    "id": "seed-venc-3",
+    "userId": "seed-aero-morón",
+    "titulo": "Seguro hangar principal",
+    "tipo": "Seguro",
+    "fechaVencimiento": "2026-05-22",
+    "notas": "Revisar póliza con corredor.",
+    "createdAt": "2025-02-01T12:00:00.000Z"
+  }
+]
