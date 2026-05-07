@@ -1,0 +1,41 @@
+[
+  {
+    "id": "seed-flight-1",
+    "userId": "seed-piloto-juan",
+    "fecha": "2025-01-15",
+    "matricula": "LV-XXX",
+    "origen": "SADM",
+    "destino": "SADM",
+    "duracionMin": 60,
+    "tipoVuelo": "Instruccion",
+    "observaciones": "Tráfico de pista con instructor.",
+    "costoUsd": 80,
+    "createdAt": "2025-01-15T18:00:00.000Z"
+  },
+  {
+    "id": "seed-flight-2",
+    "userId": "seed-piloto-juan",
+    "fecha": "2025-01-22",
+    "matricula": "LV-XXX",
+    "origen": "SADM",
+    "destino": "SAZB",
+    "duracionMin": 95,
+    "tipoVuelo": "Travesia",
+    "observaciones": "Travesía solo controlada.",
+    "costoUsd": 126.67,
+    "createdAt": "2025-01-22T18:00:00.000Z"
+  },
+  {
+    "id": "seed-flight-3",
+    "userId": "seed-piloto-juan",
+    "fecha": "2025-02-03",
+    "matricula": "LV-XXX",
+    "origen": "SADM",
+    "destino": "SADM",
+    "duracionMin": 70,
+    "tipoVuelo": "Local",
+    "observaciones": "Maniobras en zona local.",
+    "costoUsd": 93.33,
+    "createdAt": "2025-02-03T18:00:00.000Z"
+  }
+]
