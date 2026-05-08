@@ -7,30 +7,37 @@
     "icon": "./assets/images/icon.png",
     "scheme": "aeroar",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
+
     "splash": {
       "image": "./assets/images/icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#0A1628"
     },
+
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.aeroutilaviacingeneral.app"
     },
+
     "android": {
       "package": "com.aeroutilaviacingeneral.app",
+
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#0A1628"
       },
+
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION"
       ]
     },
+
     "web": {
       "favicon": "./assets/images/icon.png"
     },
+
     "plugins": [
       "expo-router",
       "expo-font",
@@ -42,13 +49,28 @@
         }
       ]
     ],
+
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
     },
+<<<<<<< HEAD
+=======
+
+    "extra": {
+      "router": {},
+      "apiBaseUrl": "https://aero-4iiv.onrender.com",
+
+      "eas": {
+        "projectId": "9b0ba9f3-95b8-4eaf-90a3-4a6e8455d3d2"
+      }
+    },
+
+>>>>>>> 332e08a99f3218ada938cd454f3c6e674c1f9d09
     "runtimeVersion": {
       "policy": "appVersion"
     },
+
     "updates": {
       "url": "https://u.expo.dev/9b0ba9f3-95b8-4eaf-90a3-4a6e8455d3d2"
     },
