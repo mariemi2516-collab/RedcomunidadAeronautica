@@ -58,7 +58,6 @@
     "extra": {
       "router": {},
       "apiBaseUrl": "https://aero-4iiv.onrender.com",
-
       "eas": {
         "projectId": "9b0ba9f3-95b8-4eaf-90a3-4a6e8455d3d2"
       }
