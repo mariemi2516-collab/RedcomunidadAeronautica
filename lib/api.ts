@@ -30,9 +30,7 @@ function readEnvBaseUrl(): string | undefined {
 function defaultBaseUrl(): string {
   const env = readEnvBaseUrl();
   if (env) return env.replace(/\/$/, "");
-  // Razonable por defecto: dev local. El usuario puede cambiarla en Ajustes.
-  if (Platform.OS === "android") return "http://10.0.2.2:4000";
-  return "http://localhost:4000";
+ return "https://aero-4iiv.onrender.com";
 }
 
 let cachedBase: string | null = null;
