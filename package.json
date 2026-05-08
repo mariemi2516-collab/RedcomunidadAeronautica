@@ -39,10 +39,7 @@
     "expo-location": "~19.0.8",
     "expo-print": "~15.0.8",
     "expo-router": "~6.0.17",
-<<<<<<< HEAD
     "expo-sharing": "~14.0.8",
-=======
->>>>>>> 1cea1a162fc3984ac48cdf55c9d22554d7773e89
     "expo-splash-screen": "~31.0.12",
     "expo-status-bar": "~3.0.9",
     "expo-system-ui": "~6.0.9",
