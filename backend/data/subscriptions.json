@@ -1,0 +1,33 @@
+[
+  {
+    "userId": "seed-piloto-juan",
+    "active": true,
+    "priceUsd": 4,
+    "startedAt": "2026-05-07T20:49:37.712Z",
+    "expiresAt": "2026-06-06T20:49:37.712Z",
+    "paymentRef": "seed-demo"
+  },
+  {
+    "userId": "seed-piloto-maria",
+    "active": false,
+    "priceUsd": 4
+  },
+  {
+    "userId": "seed-piloto-lucas",
+    "active": false,
+    "priceUsd": 4
+  },
+  {
+    "userId": "seed-aero-morón",
+    "active": true,
+    "priceUsd": 4,
+    "startedAt": "2026-05-07T20:49:37.712Z",
+    "expiresAt": "2026-06-06T20:49:37.712Z",
+    "paymentRef": "seed-demo"
+  },
+  {
+    "userId": "seed-aero-rosario",
+    "active": false,
+    "priceUsd": 4
+  }
+]

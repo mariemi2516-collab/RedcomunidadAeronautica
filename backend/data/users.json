@@ -1,0 +1,47 @@
+[
+  {
+    "id": "seed-piloto-juan",
+    "email": "juan.piloto@aero.test",
+    "passwordHash": "$2a$10$XV2BA6wO0uQfbTyehIe7uewDZx4lEoV1xXwdtnfILJjnucz9Ushvm",
+    "name": "Juan Pérez",
+    "role": "piloto",
+    "bio": "Alumno PPL acumulando horas en SADM.",
+    "createdAt": "2025-01-01T12:00:00.000Z"
+  },
+  {
+    "id": "seed-piloto-maria",
+    "email": "maria.piloto@aero.test",
+    "passwordHash": "$2a$10$v7S9e7Qo0eUbCktHEO8EFuWP5dHIpAQuM0mckbAk3wQVuGPdbUYB.",
+    "name": "María González",
+    "role": "piloto",
+    "bio": "PPL en formación, base SAOC.",
+    "createdAt": "2025-01-01T12:00:00.000Z"
+  },
+  {
+    "id": "seed-piloto-lucas",
+    "email": "lucas.piloto@aero.test",
+    "passwordHash": "$2a$10$FtsRQ.Ynw1iN6sQGaR0i/emyGVL6VHG3Yv70pI0kUFlgID5tOere.",
+    "name": "Lucas Romero",
+    "role": "piloto",
+    "bio": "Travesías por Patagonia, base SAZN.",
+    "createdAt": "2025-01-01T12:00:00.000Z"
+  },
+  {
+    "id": "seed-aero-morón",
+    "email": "moron@aero.test",
+    "passwordHash": "$2a$10$1EDSR1NGgtMdIFM8J60EyepSKl4dQ5.mAobtrAKAbl9ESYjy1Jo.C",
+    "name": "Aero Club Morón",
+    "role": "aerodromo",
+    "bio": "Aeródromo SADM, escuela de vuelo y hangares.",
+    "createdAt": "2025-01-01T12:00:00.000Z"
+  },
+  {
+    "id": "seed-aero-rosario",
+    "email": "rosario@aero.test",
+    "passwordHash": "$2a$10$2qzTfCfa52IPtnaAupkHg.1MH6G0YH4e2yImVqL2jsqmX1exiDBFG",
+    "name": "Aero Club Rosario",
+    "role": "aerodromo",
+    "bio": "Aeropuerto SAAR, vuelos comerciales y aviación general.",
+    "createdAt": "2025-01-01T12:00:00.000Z"
+  }
+]

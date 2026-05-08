@@ -1,0 +1,17 @@
+[
+  {
+    "userId": "seed-piloto-juan",
+    "pricePerHourUsd": 80,
+    "updatedAt": "2025-01-10T12:00:00.000Z"
+  },
+  {
+    "userId": "seed-piloto-maria",
+    "pricePerHourUsd": 75,
+    "updatedAt": "2025-01-10T12:00:00.000Z"
+  },
+  {
+    "userId": "seed-piloto-lucas",
+    "pricePerHourUsd": 90,
+    "updatedAt": "2025-01-10T12:00:00.000Z"
+  }
+]
