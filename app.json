@@ -54,20 +54,18 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
+"extra": {
+  "router": {},
+  "apiBaseUrl": "https://aero-4iiv.onrender.com",
 
-    "extra": {
-      "router": {},
-      "apiBaseUrl": "https://aero-4iiv.onrender.com",
+  "eas": {
+    "projectId": "9b0ba9f3-95b8-4eaf-90a3-4a6e8455d3d2"
+  }
+},
 
-      "eas": {
-        "projectId": "9b0ba9f3-95b8-4eaf-90a3-4a6e8455d3d2"
-      }  
-
-    },
-
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+"runtimeVersion": {
+  "policy": "appVersion"
+},
 
     "updates": {
       "url": "https://u.expo.dev/9b0ba9f3-95b8-4eaf-90a3-4a6e8455d3d2"
