@@ -28,10 +28,7 @@
     "expo-clipboard": "~8.0.7",
     "expo-constants": "~18.0.11",
     "expo-file-system": "~19.0.22",
-<<<<<<< HEAD
-=======
     "expo-sharing": "~14.0.8",
->>>>>>> 1cea1a162fc3984ac48cdf55c9d22554d7773e89
     "expo-font": "~14.0.10",
     "expo-haptics": "~15.0.8",
     "expo-image-picker": "~17.0.0",
