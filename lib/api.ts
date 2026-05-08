@@ -84,12 +84,12 @@ export async function apiRequest<T>(path: string, opts: RequestOpts = {}): Promi
       signal: opts.signal,
     });
   } catch (err) {
-    throw new ApiError(
-      err instanceof Error ? err.message : "Error de red",
-      0,
-      err,
-    );
-  }
+  throw new ApiError(
+    err instanceof Error ? err.message : "Error de red",
+    0,
+    err,
+  );
+}
   const text = await res.text();
   let data: unknown = null;
   if (text) {
