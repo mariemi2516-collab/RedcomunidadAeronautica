@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "C.A.R",
-    "slug": "Comunidad-Aeronautica-en-Red",
+    "name": "red de comunidad aeronautica",
+    "slug": "red-de-comunidad-aeronautica",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -54,8 +54,6 @@
       "typedRoutes": true,
       "reactCompiler": true
     },
-<<<<<<< HEAD
-=======
 
     "extra": {
       "router": {},
@@ -66,19 +64,12 @@
       }
     },
 
->>>>>>> 332e08a99f3218ada938cd454f3c6e674c1f9d09
     "runtimeVersion": {
       "policy": "appVersion"
     },
 
     "updates": {
       "url": "https://u.expo.dev/9b0ba9f3-95b8-4eaf-90a3-4a6e8455d3d2"
-    },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "aaa2760f-18a6-407a-8975-2c20c904417d"
-      }
     }
   }
 }
